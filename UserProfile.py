@@ -1,8 +1,11 @@
 import json
-from pathlib import Path
+import uuid
+import sounddevice as sd
+import wave
+import os
+from word2number import w2n
 from openai import OpenAI
 from playsound import playsound
-import uuid
 
 client = OpenAI(api_key="sk-proj-hOTTh1Qv8iNbIumiJ3S6T3BlbkFJcB15KrFMIjwvwamTTPPp")
 
@@ -47,24 +50,77 @@ def ask_question(question_text):
     )
     response.stream_to_file(speech_file_path)
     playsound(str(speech_file_path))
+    os.remove(speech_file_path)
     print(f"Playing: {question_text}")
 
-if __name__ == "__main__":
+def record_audio(filename, duration=5, fs=44100):
+    print("Recording...")
+    recording = sd.rec(int(duration * fs), samplerate=fs, channels=2, dtype='int16')
+    sd.wait()  # Wait until recording is finished
+    with wave.open(filename, 'wb') as wf:
+        wf.setnchannels(2)
+        wf.setsampwidth(2)
+        wf.setframerate(fs)
+        wf.writeframes(recording.tobytes())
+    print("Recording complete")
 
+def get_user_response():
+    audio_path = f"response_{uuid.uuid4()}.wav"
+    record_audio(audio_path)
+    with open(audio_path, "rb") as audio_file:
+        transcript = client.audio.transcriptions.create(
+            model="whisper-1",
+            file=audio_file,
+            language="en"  # Explicitly set the language to English
+        )
+    os.remove(audio_path)
+    print("Response:", transcript.text)  # Debugging line to inspect the response structure
+    return transcript.text
+
+def validate_age(age_text):
+    try:
+        cleaned_text = age_text.replace('.', '').strip().lower()
+        age = w2n.word_to_num(cleaned_text)
+        if age > 0:
+            return age
+    except Exception as e:
+        print(f"Error converting age: {e}")
+    return None
+
+if __name__ == "__main__":
     manager = UserProfileManager()
 
     # Ask and collect user profile data
-    ask_question("Enter your name:")
-    name = input("Enter your name: ")
+    while True:
+        ask_question("What is your name?")
+        name = get_user_response().strip()
+        if name:
+            break
+        print("Invalid input. Please try again.")
 
-    ask_question("Enter your age:")
-    age = int(input("Enter your age: "))
+    while True:
+        ask_question("What is your age?")
+        age_text = get_user_response().strip()
+        age = validate_age(age_text)
+        if age is not None:
+            break
+        print("Invalid age. Please enter a valid number.")
 
-    ask_question("Enter your hobbies (comma-separated):")
-    hobbies = input("Enter your hobbies (comma-separated): ").split(',')
+    while True:
+        ask_question("Tell me about something that you like")
+        hobbies = get_user_response().strip()
+        if hobbies:
+            hobbies = [hobbies.strip()]
+            break
+        print("Invalid input. Please try again.")
 
-    ask_question("Enter your learning preferences (comma-separated):")
-    learning_preferences = input("Enter your learning preferences (comma-separated): ").split(',')
+    while True:
+        ask_question("What do you want to learn?")
+        learning_preferences = get_user_response().strip()
+        if learning_preferences:
+            learning_preferences = [learning_preferences.strip()]
+            break
+        print("Invalid input. Please try again.")
 
     # Create a new user profile
     profile = UserProfile(name, age, hobbies, learning_preferences)
