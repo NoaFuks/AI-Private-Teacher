@@ -1,4 +1,10 @@
 import json
+from pathlib import Path
+from openai import OpenAI
+from playsound import playsound
+import uuid
+
+client = OpenAI(api_key="sk-proj-hOTTh1Qv8iNbIumiJ3S6T3BlbkFJcB15KrFMIjwvwamTTPPp")
 
 class UserProfile:
     def __init__(self, name, age, hobbies, learning_preferences):
@@ -16,7 +22,6 @@ class UserProfile:
             "learning_preferences": self.learning_preferences
         }
 
-
 class UserProfileManager:
     def __init__(self):
         self.profiles = []
@@ -33,15 +38,32 @@ class UserProfileManager:
             profiles_data = json.load(file)
             self.profiles = [UserProfile(**data) for data in profiles_data]
 
+def ask_question(question_text):
+    speech_file_path = f"question_{uuid.uuid4()}.mp3"
+    response = client.audio.speech.create(
+        model="tts-1",
+        voice="alloy",
+        input=question_text
+    )
+    response.stream_to_file(speech_file_path)
+    playsound(str(speech_file_path))
+    print(f"Playing: {question_text}")
 
-# Example usage:
 if __name__ == "__main__":
+
     manager = UserProfileManager()
 
-    # Collect user profile data (this would typically come from a user interface)
+    # Ask and collect user profile data
+    ask_question("Enter your name:")
     name = input("Enter your name: ")
+
+    ask_question("Enter your age:")
     age = int(input("Enter your age: "))
+
+    ask_question("Enter your hobbies (comma-separated):")
     hobbies = input("Enter your hobbies (comma-separated): ").split(',')
+
+    ask_question("Enter your learning preferences (comma-separated):")
     learning_preferences = input("Enter your learning preferences (comma-separated): ").split(',')
 
     # Create a new user profile
