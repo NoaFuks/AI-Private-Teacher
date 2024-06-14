@@ -4,6 +4,8 @@ import requests
 import json
 import os
 import random
+from gtts import gTTS
+import playsound
 
 class LessonGenerator:
     def __init__(self, user_profile, api_key):
@@ -32,17 +34,21 @@ class LessonGenerator:
         for segment in segments:
             long_paragraph = self.create_long_paragraph(segment)
             lesson_content += long_paragraph + "\n\n"
+            self.text_to_speech(long_paragraph)
             print(long_paragraph + "\n\n")
 
             example_question, example_answer = self.create_example_question(segment)
             lesson_content += example_question + "\n"
             lesson_content += example_answer + "\n\n"
+            self.text_to_speech(example_question)
+            self.text_to_speech(example_answer)
             print(example_question + "\n")
             print(example_answer + "\n\n")
 
             # Insert a personalized question related to the student's learning preferences and hobbies
             personalized_question, correct_answer, explanation = self.create_personalized_question(segment)
             lesson_content += personalized_question + "\n\n"
+            self.text_to_speech(personalized_question)
             print(personalized_question + "\n\n")
 
             # Wait for student's answer before continuing
@@ -51,12 +57,15 @@ class LessonGenerator:
 
             # Provide feedback on the student's answer
             if student_answer.strip().lower() == correct_answer.strip().lower():
-                print("Correct! Well done!\n\n")
+                feedback = "Correct! Well done!"
+                print(feedback + "\n\n")
                 lesson_content += "Feedback: Correct! Well done!\n\n"
             else:
-                print(f"Incorrect. The correct answer is: {correct_answer}\nExplanation: {explanation}\n\n")
+                feedback = f"Incorrect. The correct answer is: {correct_answer}\nExplanation: {explanation}"
+                print(feedback + "\n\n")
                 lesson_content += f"Feedback: Incorrect. The correct answer is: {correct_answer}\nExplanation: {explanation}\n\n"
 
+            self.text_to_speech(feedback)
             # Process the answer if needed, then continue with the next segment
             # For now, we'll just break after the first segment
             break
@@ -127,6 +136,11 @@ class LessonGenerator:
             print(f"Error calling OpenAI API: {e}")
             return {}
 
+    def text_to_speech(self, text):
+        tts = gTTS(text)
+        tts.save("temp.mp3")
+        playsound.playsound("temp.mp3")
+        os.remove("temp.mp3")
 
 # Example usage:
 if __name__ == "__main__":
