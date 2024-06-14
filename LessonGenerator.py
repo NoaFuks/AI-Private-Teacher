@@ -6,6 +6,7 @@ import os
 import random
 import uuid
 import pyttsx3
+import speech_recognition as sr
 from openai import OpenAI
 
 class LessonGenerator:
@@ -15,6 +16,8 @@ class LessonGenerator:
         self.client = OpenAI(api_key=api_key)
         self.tts_engine = pyttsx3.init()
         self.tts_engine.setProperty('rate', 150)  # Adjust the rate if needed
+        self.recognizer = sr.Recognizer()
+        self.microphone = sr.Microphone()
 
     def extract_text_from_pdf(self, pdf_path):
         try:
@@ -52,7 +55,8 @@ class LessonGenerator:
             self.speak_text(personalized_question)
 
             # Wait for student's answer before continuing
-            student_answer = input("Please answer the personalized question: ")
+            print("Please answer the personalized question:")
+            student_answer = self.listen_to_student()
             print(f"Student's answer: {student_answer}\n\n")
 
             # Provide feedback on the student's answer
@@ -142,6 +146,17 @@ class LessonGenerator:
         self.tts_engine.say(text)
         self.tts_engine.runAndWait()
 
+    def listen_to_student(self):
+        with self.microphone as source:
+            self.recognizer.adjust_for_ambient_noise(source)
+            audio = self.recognizer.listen(source)
+        try:
+            return self.recognizer.recognize_google(audio)
+        except sr.UnknownValueError:
+            return "Sorry, I could not understand the audio."
+        except sr.RequestError as e:
+            return f"Could not request results from Google Speech Recognition service; {e}"
+
 # Example usage:
 if __name__ == "__main__":
     from UserProfile import UserProfileManager
@@ -171,6 +186,3 @@ if __name__ == "__main__":
                 print(f"Lesson generated from {pdf_file}:\n")
                 print(lesson)
                 print("\n" + "=" * 80 + "\n")
-
-
-
