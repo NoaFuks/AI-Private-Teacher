@@ -4,13 +4,17 @@ import requests
 import json
 import os
 import random
-from gtts import gTTS
-import playsound
+import uuid
+import pyttsx3
+from openai import OpenAI
 
 class LessonGenerator:
     def __init__(self, user_profile, api_key):
         self.user_profile = user_profile
         self.api_key = api_key
+        self.client = OpenAI(api_key=api_key)
+        self.tts_engine = pyttsx3.init()
+        self.tts_engine.setProperty('rate', 150)  # Adjust the rate if needed
 
     def extract_text_from_pdf(self, pdf_path):
         try:
@@ -34,22 +38,18 @@ class LessonGenerator:
         for segment in segments:
             long_paragraph = self.create_long_paragraph(segment)
             lesson_content += long_paragraph + "\n\n"
-            self.text_to_speech(long_paragraph)
-            print(long_paragraph + "\n\n")
+            self.speak_text(long_paragraph)
 
             example_question, example_answer = self.create_example_question(segment)
             lesson_content += example_question + "\n"
             lesson_content += example_answer + "\n\n"
-            self.text_to_speech(example_question)
-            self.text_to_speech(example_answer)
-            print(example_question + "\n")
-            print(example_answer + "\n\n")
+            self.speak_text(example_question)
+            self.speak_text(example_answer)
 
             # Insert a personalized question related to the student's learning preferences and hobbies
             personalized_question, correct_answer, explanation = self.create_personalized_question(segment)
             lesson_content += personalized_question + "\n\n"
-            self.text_to_speech(personalized_question)
-            print(personalized_question + "\n\n")
+            self.speak_text(personalized_question)
 
             # Wait for student's answer before continuing
             student_answer = input("Please answer the personalized question: ")
@@ -60,12 +60,13 @@ class LessonGenerator:
                 feedback = "Correct! Well done!"
                 print(feedback + "\n\n")
                 lesson_content += "Feedback: Correct! Well done!\n\n"
+                self.speak_text(feedback)
             else:
                 feedback = f"Incorrect. The correct answer is: {correct_answer}\nExplanation: {explanation}"
                 print(feedback + "\n\n")
                 lesson_content += f"Feedback: Incorrect. The correct answer is: {correct_answer}\nExplanation: {explanation}\n\n"
+                self.speak_text(feedback)
 
-            self.text_to_speech(feedback)
             # Process the answer if needed, then continue with the next segment
             # For now, we'll just break after the first segment
             break
@@ -136,11 +137,10 @@ class LessonGenerator:
             print(f"Error calling OpenAI API: {e}")
             return {}
 
-    def text_to_speech(self, text):
-        tts = gTTS(text)
-        tts.save("temp.mp3")
-        playsound.playsound("temp.mp3")
-        os.remove("temp.mp3")
+    def speak_text(self, text):
+        print(text)
+        self.tts_engine.say(text)
+        self.tts_engine.runAndWait()
 
 # Example usage:
 if __name__ == "__main__":
@@ -171,3 +171,6 @@ if __name__ == "__main__":
                 print(f"Lesson generated from {pdf_file}:\n")
                 print(lesson)
                 print("\n" + "=" * 80 + "\n")
+
+
+
