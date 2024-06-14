@@ -4,7 +4,6 @@ import requests
 import json
 import os
 import random
-import uuid
 import pyttsx3
 import speech_recognition as sr
 from openai import OpenAI
@@ -167,7 +166,7 @@ if __name__ == "__main__":
     api_key = "sk-proj-hOTTh1Qv8iNbIumiJ3S6T3BlbkFJcB15KrFMIjwvwamTTPPp"  # Replace with your actual OpenAI API key
 
     # Path to the folder containing PDF files
-    pdf_folder_path = r"C:\Users\Noa fuks\OneDrive\IDC\Third Year B\From Idea To Reality App Using AI tools\Idea-To-Reality-Project\DataBase"
+    pdf_folder_path = r".\DataBase"
 
     # Check if the directory exists
     if not os.path.exists(pdf_folder_path):
