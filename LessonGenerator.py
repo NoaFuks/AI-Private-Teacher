@@ -7,7 +7,7 @@ import random
 import pyttsx3
 import speech_recognition as sr
 from openai import OpenAI
-from word2number import w2n  # Import word2number
+
 
 class LessonGenerator:
     def __init__(self, user_profile, api_key):
@@ -46,8 +46,8 @@ class LessonGenerator:
             example_question, example_answer = self.create_example_question(long_paragraph)
             lesson_content += example_question + "\n"
             lesson_content += example_answer + "\n\n"
-            self.speak_text(example_question)
-            self.speak_text(example_answer)
+            self.speak_text("Example " + example_question)
+            self.speak_text("Answer: " + example_answer)
 
             # Insert a personalized question related to the student's learning preferences and hobbies
             personalized_question, correct_answer, explanation = self.create_personalized_question(long_paragraph)
@@ -55,32 +55,39 @@ class LessonGenerator:
             self.speak_text(personalized_question)
 
             # Wait for student's answer before continuing
-            print("Please answer the personalized question:")
-            student_answer = self.listen_to_student()
-            print(f"Student's answer: {student_answer}\n\n")
+            print("Please answer the answer letter:")
+            student_answer = str(self.listen_to_student()).strip().lower()
+            print(f"Student's answer: {student_answer}\n")
+            print(f"correct answer: {correct_answer}\n")
 
-            # Convert student's answer from words to numbers
-            try:
-                student_answer_num = w2n.word_to_num(student_answer)
-            except ValueError:
-                student_answer_num = student_answer
+            # # Convert student's answer from words to numbers
+            # try:
+            #     student_answer_num = w2n.word_to_num(student_answer)
+            # except ValueError:
+            #     student_answer_num = student_answer
+            #
+            # # Ensure correct answer is a number if it should be
+            # try:
+            #     correct_answer_num = w2n.word_to_num(correct_answer)
+            # except ValueError:
+            #     correct_answer_num = correct_answer
 
-            # Ensure correct answer is a number if it should be
-            try:
-                correct_answer_num = w2n.word_to_num(correct_answer)
-            except ValueError:
-                correct_answer_num = correct_answer
+            if student_answer == "bee" or student_answer == "bea" or student_answer == "be":
+                student_answer = "b"
+            elif student_answer == "cee" or student_answer == "cea" or student_answer == "sea" or \
+                    student_answer == "see":
+                student_answer = "c"
 
             # Provide feedback on the student's answer
-            if str(student_answer_num).strip().lower() == str(correct_answer_num).strip().lower():
+            if str(correct_answer).strip().lower() == student_answer:
                 feedback = "Correct! Well done!"
-                print(feedback + "\n\n")
+                # print(feedback + "\n\n")
                 lesson_content += "Feedback: Correct! Well done!\n\n"
                 self.speak_text(feedback)
             else:
                 feedback = f"Incorrect. The correct answer is: {correct_answer}\nExplanation: {explanation}"
-                print(feedback + "\n\n")
-                lesson_content += f"Feedback: Incorrect. The correct answer is: {correct_answer}\nExplanation: {explanation}\n\n"
+                # print(feedback + "\n\n")
+                lesson_content += f"Feedback: {feedback}\n\n"
                 self.speak_text(feedback)
 
             # Process the answer if needed, then continue with the next segment
@@ -108,13 +115,25 @@ class LessonGenerator:
 
     def create_long_paragraph(self, segment):
         learning_preferences = ', '.join(self.user_profile.learning_preferences)
-        prompt = f"Generate a detailed and comprehensive paragraph from the following content suitable for a {self.user_profile.age}-year-old student with learning preferences: {learning_preferences}. The paragraph should be informative, engaging, and cover the topic extensively.:\n\n{segment}"
+        prompt = f"Generate a detailed and comprehensive paragraph from the following content suitable for a " \
+                 f"{self.user_profile.age}-year-old student with learning preferences: {learning_preferences}. " \
+                 f"The paragraph should be informative, engaging, and cover the topic extensively.:\n\n{segment}"
         response = self._call_openai_api(prompt, max_tokens=300)
         return response.get('choices', [{}])[0].get('message', {}).get('content', '').strip()
 
     def create_example_question(self, long_paragraph):
         learning_preferences = ', '.join(self.user_profile.learning_preferences)
-        prompt = f"Create an example question and provide an answer with an explanation based on the following paragraph to help a {self.user_profile.age}-year-old student understand better. Consider the student's learning preferences: {learning_preferences}.\n\n{long_paragraph}"
+        prompt = f"Create an example question and provide an answer with an explanation based on the following " \
+                 f"paragraph to help a {self.user_profile.age}-year-old student understand better. " \
+                 f"Consider the student's learning preferences: {learning_preferences}.\n\n{long_paragraph}" \
+                 f"Here is an example of how it should look exactly:\n " \
+                 f"Question: How many legs does a dog have?\n" \
+                 f"a) 3\n" \
+                 f"b) 4\n" \
+                 f"c) 6\n" \
+                 f"d) 8\n" \
+                 f"Answer: b" \
+                 f"Explanation: Dogs have four legs, just like most mammals."
         response = self._call_openai_api(prompt, max_tokens=150)
         example_question_answer = response.get('choices', [{}])[0].get('message', {}).get('content', '').strip()
         if 'Answer:' in example_question_answer:
@@ -126,17 +145,19 @@ class LessonGenerator:
     def create_personalized_question(self, long_paragraph):
         hobby = random.choice(self.user_profile.hobbies)
         learning_preference = self.user_profile.learning_preferences[0]
-        prompt = f"Create a multiple choice (1-4) question related to {hobby} that incorporates the topic being " \
-                 f"studied. Provide the correct answer and an explanation for the answer if the student is wrong " \
-                 f"(just after the student gives their answer). The question should be appropriate for a {self.user_profile.age}" \
-                 f"-year-old student with a preference for {learning_preference}.\n\nHere is the paragraph to base the question on:\n\n{long_paragraph}. " \
-                 f"Here is an example of how it should look: " \
-                 f"Question: How many legs does a dog have?" \
-                 f"1) 3" \
-                 f"2) 4" \
-                 f"3) 6" \
-                 f"4) 8" \
-                 f"Answer: 2" \
+        prompt = f"Create a multiple choice (a-d) question related to {hobby} that incorporates the topic being " \
+                 f"studied. Provide the correct answer (the answer should be only the correct answer letter) " \
+                 f"and an explanation for the answer if the student is wrong " \
+                 f"(just after the student gives their answer). The question should be appropriate for a " \
+                 f"{self.user_profile.age}-year-old student with a preference for {learning_preference}.\n\n" \
+                 f"Here is the paragraph to base the question on:\n\n{long_paragraph}. " \
+                 f"Here is an example of how it should look exactly:\n " \
+                 f"Question: How many legs does a dog have?\n" \
+                 f"a) 3\n" \
+                 f"b) 4\n" \
+                 f"c) 6\n" \
+                 f"d) 8\n" \
+                 f"Answer: b" \
                  f"Explanation: Dogs have four legs, just like most mammals."
         response = self._call_openai_api(prompt, max_tokens=150)
         content = response.get('choices', [{}])[0].get('message', {}).get('content', '').strip()
@@ -182,6 +203,7 @@ class LessonGenerator:
         except sr.RequestError as e:
             return f"Could not request results from Google Speech Recognition service; {e}"
 
+
 # Example usage:
 if __name__ == "__main__":
     from UserProfile import UserProfileManager
@@ -208,6 +230,6 @@ if __name__ == "__main__":
                 pdf_path = os.path.join(pdf_folder_path, pdf_file)
                 generator = LessonGenerator(user_profile, api_key)
                 lesson = generator.generate_lesson(pdf_path)
-                print(f"Lesson generated from {pdf_file}:\n")
-                print(lesson)
+                # print(f"Lesson generated from {pdf_file}:\n")
+                # print(lesson)
                 print("\n" + "=" * 80 + "\n")

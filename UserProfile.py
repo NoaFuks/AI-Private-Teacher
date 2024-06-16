@@ -9,6 +9,7 @@ from playsound import playsound
 
 client = OpenAI(api_key="sk-proj-hOTTh1Qv8iNbIumiJ3S6T3BlbkFJcB15KrFMIjwvwamTTPPp")
 
+
 class UserProfile:
     def __init__(self, name, age, hobbies, learning_preferences):
         self.name = name
@@ -24,6 +25,7 @@ class UserProfile:
             "hobbies": self.hobbies,
             "learning_preferences": self.learning_preferences
         }
+
 
 class UserProfileManager:
     def __init__(self):
@@ -41,6 +43,7 @@ class UserProfileManager:
             profiles_data = json.load(file)
             self.profiles = [UserProfile(**data) for data in profiles_data]
 
+
 def ask_question(question_text):
     speech_file_path = f"question_{uuid.uuid4()}.mp3"
     response = client.audio.speech.create(
@@ -53,6 +56,7 @@ def ask_question(question_text):
     os.remove(speech_file_path)
     print(f"Playing: {question_text}")
 
+
 def record_audio(filename, duration=5, fs=44100):
     print("Recording...")
     recording = sd.rec(int(duration * fs), samplerate=fs, channels=2, dtype='int16')
@@ -63,6 +67,7 @@ def record_audio(filename, duration=5, fs=44100):
         wf.setframerate(fs)
         wf.writeframes(recording.tobytes())
     print("Recording complete")
+
 
 def get_user_response():
     audio_path = f"response_{uuid.uuid4()}.wav"
@@ -77,6 +82,7 @@ def get_user_response():
     print("Response:", transcript.text)  # Debugging line to inspect the response structure
     return transcript.text
 
+
 def validate_age(age_text):
     try:
         cleaned_text = age_text.replace('.', '').strip().lower()
@@ -86,6 +92,7 @@ def validate_age(age_text):
     except Exception as e:
         print(f"Error converting age: {e}")
     return None
+
 
 if __name__ == "__main__":
     manager = UserProfileManager()
