@@ -103,7 +103,7 @@ class LessonGenerator:
             }
 
             # Ask if the student has a question
-            self.speak_text("Do you have any questions related to this lesson? (Please say 'yes' or 'no')")
+            self.speak_text("Do you have any questions related to this part? (Please say 'yes' or 'no')")
             has_question = str(self.listen_to_student()).strip().lower()
 
             student_questions = []
