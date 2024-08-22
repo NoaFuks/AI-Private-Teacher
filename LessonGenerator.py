@@ -41,6 +41,14 @@ class LessonGenerator:
         segments = self.split_text_into_segments(text)
         lesson_content = ""
 
+        # Define the lesson topic (this should be dynamic based on the content)
+        lesson_topic = "Math: Natural Numbers and Their Properties"
+
+        # Add a brief summary of the lesson at the beginning
+        lesson_summary = f"Today's topic: {lesson_topic}"
+        lesson_content += lesson_summary + "\n\n"
+        self.speak_text(lesson_summary)
+
         for segment in segments:
             long_paragraph = self.create_long_paragraph(segment)
             lesson_content += long_paragraph + "\n\n"
@@ -57,56 +65,59 @@ class LessonGenerator:
             self.speak_text(personalized_question)
 
             print("Please answer the answer letter:")
-            # student_answer = str(self.listen_to_student()).strip().lower()
-            student_answer = self.listen_with_retry()
+            student_answer = self.listen_to_student()
 
             print(f"Student's answer: {student_answer}\n")
-            print(f"correct answer: {correct_answer}\n")
+            print(f"Correct answer: {correct_answer}\n")
 
-
-            if student_answer in ["bee", "be", "b", "bi"]:
+            if  student_answer in ["hey", "yay", "hi"]:
+                student_answer = "a"
+            elif student_answer in ["bee", "be", "b", "bi", "beat"]:
                 student_answer = "b"
             elif student_answer in ["see", "sea", "cee", "c", "v"]:
                 student_answer = "c"
-            elif student_answer in ["hey", "yay", "hi"]:
-                student_answer = "a"
+            elif student_answer in ["gee"]:
+                student_answer = "d"
 
-            if str(correct_answer).strip().lower() == student_answer:
-                feedback = "Correct! Well done!"
-                lesson_content += "Feedback: Correct! Well done!\n\n"
-                self.speak_text(feedback)
-            else:
-                feedback = f"Incorrect. The correct answer is: {correct_answer}\nExplanation: {explanation}"
-                lesson_content += f"Feedback: {feedback}\n\n"
-                self.speak_text(feedback)
+            correct = 1 if str(correct_answer).strip().lower() == student_answer else 0
+            feedback = "Correct! Well done!" if correct else f"Incorrect. The correct answer is: {correct_answer}\nExplanation: {explanation}"
+            lesson_content += f"Feedback: {feedback}\n\n"
+            self.speak_text(feedback)
+
+            # Collect interaction details
+            interaction_details = {
+                "student_answer": student_answer,
+                "correct_answer": correct_answer,
+                "feedback": feedback
+            }
 
             # Ask if the student has a question
             self.speak_text("Do you have any questions related to this lesson? (Please say 'yes' or 'no')")
             has_question = str(self.listen_to_student()).strip().lower()
 
+            student_questions = []  # Initialize a list to store student questions
+
             if has_question in ["yes", "y"]:
                 student_question_answer = self.ask_student_question()
                 lesson_content += f"Student's Question: {student_question_answer}\n\n"
+                student_questions.append(student_question_answer)
 
-                # Example to update progress based on student's answer
-                lesson_topic = "example_lesson"
-                correct = 1 if student_answer == correct_answer else 0
-                explanation = f"Explanation: {explanation}" if not correct else ""
-
-                self.progress_tracker.update_progress(lesson_topic, correct, explanation)
+            # Update progress based on student's interaction
+            self.progress_tracker.update_progress(
+                lesson_topic,
+                correct,
+                explanation,
+                interaction_details={
+                    "interaction_details": [interaction_details],
+                    "student_questions": student_questions
+                },
+                lesson_summary=lesson_summary
+            )
 
             # Break after the first segment for now
             break
 
         return lesson_content
-
-    def listen_with_retry(self, retries=3):
-        for attempt in range(retries):
-            student_answer = self.listen_to_student().strip().lower()
-            if student_answer not in ["sorry, i could not understand the audio.", ""]:
-                return student_answer
-            self.speak_text("I couldn't understand that, could you please repeat?")
-        return "Sorry, I couldn't understand after several attempts."
 
     def split_text_into_segments(self, text, max_length=500):
         sentences = re.split(r'(?<=[.!?]) +', text)
@@ -223,28 +234,30 @@ class LessonGenerator:
         self.tts_engine.runAndWait()
 
     def listen_to_student(self, audio_file=None):
-        try:
-            if audio_file:
-                with sr.AudioFile(audio_file) as source:
-                    audio = self.recognizer.record(source)
-            else:
-                with self.microphone as source:
-                    print("Listening... Please speak now.")
-                    self.recognizer.adjust_for_ambient_noise(source, duration=2)
-                    audio = self.recognizer.listen(source, timeout=10, phrase_time_limit=15)
-            print("Processing audio...")
-            response = self.recognizer.recognize_google(audio)
-            print(f"Recognized speech: {response}")
-            return response
-        except sr.UnknownValueError:
-            print("Google Speech Recognition could not understand the audio.")
-            return "Sorry, I could not understand the audio."
-        except sr.RequestError as e:
-            print(f"Could not request results from Google Speech Recognition service; {e}")
-            return f"Could not request results from Google Speech Recognition service; {e}"
-        except Exception as e:
-            print(f"An unexpected error occurred: {e}")
-            return "An error occurred while trying to recognize your speech."
+        while True:
+            try:
+                if audio_file:
+                    with sr.AudioFile(audio_file) as source:
+                        audio = self.recognizer.record(source)
+                else:
+                    with self.microphone as source:
+                        print("Listening... Please speak now.")
+                        self.recognizer.adjust_for_ambient_noise(source, duration=2)
+                        audio = self.recognizer.listen(source, timeout=10, phrase_time_limit=15)
+                print("Processing audio...")
+                response = self.recognizer.recognize_google(audio)
+                print(f"Recognized speech: {response}")
+                return response
+            except sr.UnknownValueError:
+                print("Google Speech Recognition could not understand the audio. Please try again.")
+                self.speak_text("I couldn't understand that. Could you please repeat?")
+            except sr.RequestError as e:
+                print(f"Could not request results from Google Speech Recognition service; {e}")
+                return f"Could not request results from Google Speech Recognition service; {e}"
+            except Exception as e:
+                print(f"An unexpected error occurred: {e}")
+                return "An error occurred while trying to recognize your speech."
+
 
 
 # Example usage:
