@@ -7,6 +7,7 @@ import random
 import pyttsx3
 import speech_recognition as sr
 from openai import OpenAI
+import time
 
 
 class LessonGenerator:
@@ -38,25 +39,34 @@ class LessonGenerator:
         if not text:
             return "No text extracted from the PDF."
 
-        segments = self.split_text_into_segments(text)
-        lesson_content = ""
-
-        # Define the lesson topic (this should be dynamic based on the content)
-        lesson_topic = "Math: Natural Numbers and Their Properties"
+        # Extract a dynamic lesson topic from the content
+        lesson_topic = self.extract_topic_from_content(text)
 
         # Add a brief summary of the lesson at the beginning
         lesson_summary = f"Today's topic: {lesson_topic}"
-        lesson_content += lesson_summary + "\n\n"
         self.speak_text(lesson_summary)
 
+        # Initialize lesson content and start tracking time
+        lesson_content = lesson_summary + "\n\n"
+        start_time = time.time()  # Record the start time of the lesson
+        max_lesson_duration = 300  # 5 minutes
+
+        # Split the text into segments for processing
+        segments = self.split_text_into_segments(text)
+
         for segment in segments:
+            current_time = time.time()
+            lesson_duration = current_time - start_time
+
+            if lesson_duration >= max_lesson_duration:
+                break
+
             long_paragraph = self.create_long_paragraph(segment)
             lesson_content += long_paragraph + "\n\n"
             self.speak_text(long_paragraph)
 
             example_question, example_answer = self.create_example_question(long_paragraph)
-            lesson_content += example_question + "\n"
-            lesson_content += example_answer + "\n\n"
+            lesson_content += example_question + "\n" + example_answer + "\n\n"
             self.speak_text("Example " + example_question)
             self.speak_text("Answer: " + example_answer)
 
@@ -70,11 +80,12 @@ class LessonGenerator:
             print(f"Student's answer: {student_answer}\n")
             print(f"Correct answer: {correct_answer}\n")
 
-            if  student_answer in ["hey", "yay", "hi"]:
+            # Normalize the student's answer
+            if student_answer in ["hey", "yay", "hi", "play"]:
                 student_answer = "a"
             elif student_answer in ["bee", "be", "b", "bi", "beat"]:
                 student_answer = "b"
-            elif student_answer in ["see", "sea", "cee", "c", "v"]:
+            elif student_answer in ["see", "sea", "cee", "c", "v", "sing"]:
                 student_answer = "c"
             elif student_answer in ["gee"]:
                 student_answer = "d"
@@ -95,14 +106,13 @@ class LessonGenerator:
             self.speak_text("Do you have any questions related to this lesson? (Please say 'yes' or 'no')")
             has_question = str(self.listen_to_student()).strip().lower()
 
-            student_questions = []  # Initialize a list to store student questions
-
+            student_questions = []
             if has_question in ["yes", "y"]:
                 student_question_answer = self.ask_student_question()
                 lesson_content += f"Student's Question: {student_question_answer}\n\n"
                 student_questions.append(student_question_answer)
 
-            # Update progress based on student's interaction
+            # Update progress and include the lesson number in the file name
             self.progress_tracker.update_progress(
                 lesson_topic,
                 correct,
@@ -114,10 +124,14 @@ class LessonGenerator:
                 lesson_summary=lesson_summary
             )
 
-            # Break after the first segment for now
-            break
-
         return lesson_content
+
+    def extract_topic_from_content(self, text):
+        # Use a simple heuristic or NLP-based method to extract the main topic
+        prompt = f"Extract the main topic from the following text:\n\n{text[:1000]}"  # Use the first 1000 characters
+        response = self._call_openai_api(prompt, max_tokens=50)
+        topic = response.get('choices', [{}])[0].get('message', {}).get('content', '').strip()
+        return topic or "General Knowledge"
 
     def split_text_into_segments(self, text, max_length=500):
         sentences = re.split(r'(?<=[.!?]) +', text)
