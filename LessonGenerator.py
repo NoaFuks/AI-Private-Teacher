@@ -59,7 +59,9 @@ class LessonGenerator:
             lesson_duration = current_time - start_time
 
             if lesson_duration >= max_lesson_duration:
-                break
+                print("Lesson time is up. The lesson will end now.")
+                self.speak_text("Time's up for today's lesson. We will continue next time.")
+                break  # Stop the lesson if the time limit is reached
 
             long_paragraph = self.create_long_paragraph(segment)
             lesson_content += long_paragraph + "\n\n"
@@ -300,11 +302,15 @@ if __name__ == "__main__":
         if not pdf_files:
             print("No PDF files found in the specified directory.")
         else:
-            for pdf_file in pdf_files:
-                pdf_path = os.path.join(pdf_folder_path, pdf_file)
-                # generator = LessonGenerator(user_profile, api_key)
-                generator = LessonGenerator(user_profile, api_key, progress_tracker)
-                lesson = generator.generate_lesson(pdf_path)
-                # print(f"Lesson generated from {pdf_file}:\n")
-                # print(lesson)
-                print("\n" + "=" * 80 + "\n")
+            pdf_file = pdf_files[0]  # Pick the first PDF file for this session
+            pdf_path = os.path.join(pdf_folder_path, pdf_file)
+            generator = LessonGenerator(user_profile, api_key, progress_tracker)
+            lesson = generator.generate_lesson(pdf_path)
+            # for pdf_file in pdf_files:
+            #     pdf_path = os.path.join(pdf_folder_path, pdf_file)
+            #     # generator = LessonGenerator(user_profile, api_key)
+            #     generator = LessonGenerator(user_profile, api_key, progress_tracker)
+            #     lesson = generator.generate_lesson(pdf_path)
+            #     # print(f"Lesson generated from {pdf_file}:\n")
+            #     # print(lesson)
+            print("\n" + "=" * 80 + "\n")
