@@ -4,10 +4,10 @@ import requests
 import json
 import os
 import random
-import pyttsx3
-import speech_recognition as sr
+# import pyttsx3
+# import speech_recognition as sr
 from openai import OpenAI
-import time
+# import timeout
 
 
 class LessonGenerator:
@@ -15,10 +15,10 @@ class LessonGenerator:
         self.user_profile = user_profile
         self.api_key = api_key
         self.client = OpenAI(api_key=api_key)
-        self.tts_engine = pyttsx3.init()
-        self.tts_engine.setProperty('rate', 150)  # Adjust the rate if needed
-        self.recognizer = sr.Recognizer()
-        self.microphone = sr.Microphone()
+#         self.tts_engine = pyttsx3.init()
+#         self.tts_engine.setProperty('rate', 150)  # Adjust the rate if needed
+#         self.recognizer = sr.Recognizer()
+#         self.microphone = sr.Microphone()
 
         self.progress_tracker = progress_tracker
 
@@ -34,97 +34,138 @@ class LessonGenerator:
             print(f"Error extracting text from PDF: {e}")
             return ""
 
-    def generate_lesson(self, pdf_path):
-        text = self.extract_text_from_pdf(pdf_path)
-        if not text:
-            return "No text extracted from the PDF."
+    def generate_lesson_in_segments(self, pdf_path):
+            text = self.extract_text_from_pdf(pdf_path)
+            if not text:
+                return {"lesson": "No text extracted from the PDF.", "questions": [], "ask_for_questions": False}
 
-        # Extract a dynamic lesson topic from the content
-        lesson_topic = self.extract_topic_from_content(text)
+#             # Extract a dynamic lesson topic from the content
+#             lesson_topic = self.extract_topic_from_content(text)
+#
+#             # Generate the lesson summary and detailed content
+#             lesson_summary = f"Today's topic: {lesson_topic}."
+#             lesson_content = lesson_summary + "\n\n"
 
-        # Add a brief summary of the lesson at the beginning
-        lesson_summary = f"Today's topic: {lesson_topic}"
-        self.speak_text(lesson_summary)
+            # Split the text into segments and generate corresponding questions for each segment
+            segments = self.split_text_into_segments(text)
+            lesson_segments = []
+            all_questions = []
 
-        # Initialize lesson content and start tracking time
-        lesson_content = lesson_summary + "\n\n"
-        start_time = time.time()  # Record the start time of the lesson
-        max_lesson_duration = 300  # 5 minutes
+            for segment in segments:
+                # Add segment to the list
+                long_paragraph = self.create_long_paragraph(segment)
+                lesson_segments.append(long_paragraph)
 
-        # Split the text into segments for processing
-        segments = self.split_text_into_segments(text)
+                # Generate corresponding questions
+                personalized_question, correct_answer, explanation = self.create_personalized_question(long_paragraph)
 
-        for segment in segments:
-            current_time = time.time()
-            lesson_duration = current_time - start_time
+                all_questions.append({
+                    "question": personalized_question,
+                    "correct_answer": correct_answer,
+                    "explanation": explanation
+                })
 
-            if lesson_duration >= max_lesson_duration:
-                break
+            # Return all lesson segments and questions
+            return {"lesson_segments": lesson_segments, "questions": all_questions}
 
-            long_paragraph = self.create_long_paragraph(segment)
-            lesson_content += long_paragraph + "\n\n"
-            self.speak_text(long_paragraph)
+    def handle_student_question(self, student_question):
+        prompt = f"Answer this student's question: {student_question}"
+        response = self._call_openai_api(prompt, max_tokens=150)
+        return response.get('choices', [{}])[0].get('message', {}).get('content', '').strip()
 
-            example_question, example_answer = self.create_example_question(long_paragraph)
-            lesson_content += example_question + "\n" + example_answer + "\n\n"
-            self.speak_text("Example " + example_question)
-            self.speak_text("Answer: " + example_answer)
-
-            personalized_question, correct_answer, explanation = self.create_personalized_question(long_paragraph)
-            lesson_content += personalized_question + "\n\n"
-            self.speak_text(personalized_question)
-
-            print("Please answer the answer letter:")
-            student_answer = self.listen_to_student()
-
-            print(f"Student's answer: {student_answer}\n")
-            print(f"Correct answer: {correct_answer}\n")
-
-            # Normalize the student's answer
-            if student_answer in ["hey", "yay", "hi", "play"]:
-                student_answer = "a"
-            elif student_answer in ["bee", "be", "b", "bi", "beat"]:
-                student_answer = "b"
-            elif student_answer in ["see", "sea", "cee", "c", "v", "sing"]:
-                student_answer = "c"
-            elif student_answer in ["gee"]:
-                student_answer = "d"
-
-            correct = 1 if str(correct_answer).strip().lower() == student_answer else 0
-            feedback = "Correct! Well done!" if correct else f"Incorrect. The correct answer is: {correct_answer}\nExplanation: {explanation}"
-            lesson_content += f"Feedback: {feedback}\n\n"
-            self.speak_text(feedback)
-
-            # Collect interaction details
-            interaction_details = {
-                "student_answer": student_answer,
-                "correct_answer": correct_answer,
-                "feedback": feedback
-            }
-
-            # Ask if the student has a question
-            self.speak_text("Do you have any questions related to this part? (Please say 'yes' or 'no')")
-            has_question = str(self.listen_to_student()).strip().lower()
-
-            student_questions = []
-            if has_question in ["yes", "y"]:
-                student_question_answer = self.ask_student_question()
-                lesson_content += f"Student's Question: {student_question_answer}\n\n"
-                student_questions.append(student_question_answer)
-
-            # Update progress and include the lesson number in the file name
-            self.progress_tracker.update_progress(
-                lesson_topic,
-                correct,
-                explanation,
-                interaction_details={
-                    "interaction_details": [interaction_details],
-                    "student_questions": student_questions
-                },
-                lesson_summary=lesson_summary
-            )
-
-        return lesson_content
+#     def generate_lesson(self, pdf_path):
+#         text = self.extract_text_from_pdf(pdf_path)
+#         if not text:
+#             return "No text extracted from the PDF."
+#
+#         # Extract a dynamic lesson topic from the content
+#         lesson_topic = self.extract_topic_from_content(text)
+#
+#         # Add a brief summary of the lesson at the beginning
+#         lesson_summary = f"Today's topic: {lesson_topic}"
+#         self.speak_text(lesson_summary)
+#
+#         # Initialize lesson content and start tracking time
+#         lesson_content = lesson_summary + "\n\n"
+#         start_time = time.time()  # Record the start time of the lesson
+#         max_lesson_duration = 300  # 5 minutes
+#
+#         # Split the text into segments for processing
+#         segments = self.split_text_into_segments(text)
+#
+#         for segment in segments:
+#             current_time = time.time()
+#             lesson_duration = current_time - start_time
+#
+#             if lesson_duration >= max_lesson_duration:
+#                 print("Lesson time is up. The lesson will end now.")
+#                 self.speak_text("Time's up for today's lesson. We will continue next time.")
+#                 break  # Stop the lesson if the time limit is reached
+#
+#             long_paragraph = self.create_long_paragraph(segment)
+#             lesson_content += long_paragraph + "\n\n"
+#             self.speak_text(long_paragraph)
+#
+#             example_question, example_answer = self.create_example_question(long_paragraph)
+#             lesson_content += example_question + "\n" + example_answer + "\n\n"
+#             self.speak_text("Example " + example_question)
+#             self.speak_text("Answer: " + example_answer)
+#
+#             personalized_question, correct_answer, explanation = self.create_personalized_question(long_paragraph)
+#             lesson_content += personalized_question + "\n\n"
+#             self.speak_text(personalized_question)
+#
+#             print("Please answer the answer letter:")
+#             student_answer = self.listen_to_student()
+#
+#             print(f"Student's answer: {student_answer}\n")
+#             print(f"Correct answer: {correct_answer}\n")
+#
+#             # Normalize the student's answer
+#             if student_answer in ["hey", "yay", "hi", "play"]:
+#                 student_answer = "a"
+#             elif student_answer in ["bee", "be", "b", "bi", "beat"]:
+#                 student_answer = "b"
+#             elif student_answer in ["see", "sea", "cee", "c", "v", "sing"]:
+#                 student_answer = "c"
+#             elif student_answer in ["gee"]:
+#                 student_answer = "d"
+#
+#             correct = 1 if str(correct_answer).strip().lower() == student_answer else 0
+#             feedback = "Correct! Well done!" if correct else f"Incorrect. The correct answer is: {correct_answer}\nExplanation: {explanation}"
+#             lesson_content += f"Feedback: {feedback}\n\n"
+#             self.speak_text(feedback)
+#
+#             # Collect interaction details
+#             interaction_details = {
+#                 "student_answer": student_answer,
+#                 "correct_answer": correct_answer,
+#                 "feedback": feedback
+#             }
+#
+#             # Ask if the student has a question
+#             self.speak_text("Do you have any questions related to this part? (Please say 'yes' or 'no')")
+#             has_question = str(self.listen_to_student()).strip().lower()
+#
+#             student_questions = []
+#             if has_question in ["yes", "y"]:
+#                 student_question_answer = self.ask_student_question()
+#                 lesson_content += f"Student's Question: {student_question_answer}\n\n"
+#                 student_questions.append(student_question_answer)
+#
+#             # Update progress and include the lesson number in the file name
+#             self.progress_tracker.update_progress(
+#                 lesson_topic,
+#                 correct,
+#                 explanation,
+#                 interaction_details={
+#                     "interaction_details": [interaction_details],
+#                     "student_questions": student_questions
+#                 },
+#                 lesson_summary=lesson_summary
+#             )
+#
+#         return lesson_content
 
     def extract_topic_from_content(self, text):
         # Use a simple heuristic or NLP-based method to extract the main topic
@@ -151,17 +192,19 @@ class LessonGenerator:
         return segments
 
     def create_long_paragraph(self, segment):
-        learning_preferences = ', '.join(self.user_profile.learning_preferences)
-        prompt = f"Generate a detailed and comprehensive paragraph from the following content suitable for a " \
-                 f"{self.user_profile.age}-year-old student with learning preferences: {learning_preferences}. " \
-                 f"The paragraph should be informative, engaging, and cover the topic extensively.:\n\n{segment}"
+        learning_preferences = ', '.join(self.user_profile.get("learning_preferences", ["unknown learning preferences"]))
+        age = self.user_profile.get("age", "unknown age")
+        prompt = f"Generate a short but detailed and comprehensive paragraph from the following content suitable for a " \
+                 f"{age}-year-old student with learning preferences: {learning_preferences}. " \
+                 f"The paragraph should be informative, engaging, and cover the topic.:\n\n{segment}"
         response = self._call_openai_api(prompt, max_tokens=300)
         return response.get('choices', [{}])[0].get('message', {}).get('content', '').strip()
 
     def create_example_question(self, long_paragraph):
-        learning_preferences = ', '.join(self.user_profile.learning_preferences)
+        learning_preferences = ', '.join(self.user_profile.get("learning_preferences", ["unknown learning preferences"]))
+        age = self.user_profile.get("age", "unknown age")
         prompt = f"Create an example question and provide an answer with an explanation based on the following " \
-                 f"paragraph to help a {self.user_profile.age}-year-old student understand better. " \
+                 f"paragraph to help a {age}-year-old student understand better. " \
                  f"Consider the student's learning preferences: {learning_preferences}.\n\n{long_paragraph}" \
                  f"Here is an example of how it should look exactly:\n " \
                  f"Question: How many legs does a dog have?\n" \
@@ -180,13 +223,14 @@ class LessonGenerator:
             return example_question_answer, "No answer provided"
 
     def create_personalized_question(self, long_paragraph):
-        hobby = random.choice(self.user_profile.hobbies)
-        learning_preference = self.user_profile.learning_preferences[0]
+        hobby = random.choice(self.user_profile.get("hobbies", ["unknown hobby"]))
+        learning_preferences = ', '.join(self.user_profile.get("learning_preferences", ["unknown learning preferences"]))
+        age = self.user_profile.get("age", "unknown age")
         prompt = f"Create a multiple choice (a-d) question related to {hobby} that incorporates the topic being " \
                  f"studied. Provide the correct answer (the answer should be only the correct answer letter) " \
                  f"and an explanation for the answer if the student is wrong " \
-                 f"(just after the student gives their answer). The question should be appropriate for a " \
-                 f"{self.user_profile.age}-year-old student with a preference for {learning_preference}.\n\n" \
+                 f"The question should be appropriate for a " \
+                 f"{age}-year-old student with learning preferences: {learning_preferences}.\n\n" \
                  f"Here is the paragraph to base the question on:\n\n{long_paragraph}. " \
                  f"Here is an example of how it should look exactly:\n " \
                  f"Question: How many legs does a dog have?\n" \
@@ -300,11 +344,15 @@ if __name__ == "__main__":
         if not pdf_files:
             print("No PDF files found in the specified directory.")
         else:
-            for pdf_file in pdf_files:
-                pdf_path = os.path.join(pdf_folder_path, pdf_file)
-                # generator = LessonGenerator(user_profile, api_key)
-                generator = LessonGenerator(user_profile, api_key, progress_tracker)
-                lesson = generator.generate_lesson(pdf_path)
-                # print(f"Lesson generated from {pdf_file}:\n")
-                # print(lesson)
-                print("\n" + "=" * 80 + "\n")
+            pdf_file = pdf_files[0]  # Pick the first PDF file for this session
+            pdf_path = os.path.join(pdf_folder_path, pdf_file)
+            generator = LessonGenerator(user_profile, api_key, progress_tracker)
+            lesson = generator.generate_lesson(pdf_path)
+            # for pdf_file in pdf_files:
+            #     pdf_path = os.path.join(pdf_folder_path, pdf_file)
+            #     # generator = LessonGenerator(user_profile, api_key)
+            #     generator = LessonGenerator(user_profile, api_key, progress_tracker)
+            #     lesson = generator.generate_lesson(pdf_path)
+            #     # print(f"Lesson generated from {pdf_file}:\n")
+            #     # print(lesson)
+            print("\n" + "=" * 80 + "\n")

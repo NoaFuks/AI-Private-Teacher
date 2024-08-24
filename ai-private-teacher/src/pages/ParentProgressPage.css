@@ -1,0 +1,50 @@
+/* src/pages/ParentProgressPage.css */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
+}
+
+.progress-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f4f4f4;
+}
+
+.progress-card {
+    background-color: white;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    width: 100%;
+    text-align: center;
+}
+
+.progress-card img {
+    margin-bottom: 20px;
+}
+
+h1 {
+    font-size: 2.2rem;
+    color: #333;
+}
+
+.progress-content {
+    text-align: left;
+    margin-top: 20px;
+}
+
+pre {
+    background-color: #f7f7f7;
+    padding: 20px;
+    border-radius: 8px;
+    font-size: 1rem;
+    text-align: left;
+}
+
+p {
+    font-size: 1.2rem;
+    color: #555;
+}

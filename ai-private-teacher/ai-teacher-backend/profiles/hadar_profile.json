@@ -1,0 +1,10 @@
+{
+    "name": "hadar",
+    "age": 12,
+    "hobbies": [
+        "book"
+    ],
+    "learning_preferences": [
+        "math"
+    ]
+}

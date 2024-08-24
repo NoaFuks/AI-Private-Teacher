@@ -1,0 +1,131 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #e0f7fa; /* Light blue background */
+    margin: 0;
+    padding: 0;
+}
+
+.lesson-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+    background-color: #e0f7fa; /* Light blue background */
+}
+
+.lesson-card {
+    background-color: white;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    max-width: 1500px;
+    width: 100%;
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.lesson-card:hover {
+    transform: translateY(-5px);
+}
+
+.lesson-card img {
+    margin-bottom: 20px;
+}
+
+h1 {
+    font-size: 2.2rem;
+    color: #333;
+    margin-bottom: 30px;
+}
+
+.form-group {
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    font-size: 1.1rem;
+    color: #555;
+}
+
+.form-control {
+    padding: 10px;
+    font-size: 1.1rem;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    width: 100%;
+}
+
+.btn {
+    border: none;
+    padding: 12px 30px;
+    font-size: 1.1rem;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    display: inline-block;
+    margin: 10px;
+}
+
+.btn-primary {
+    background-color: #2193b0; /* Primary blue */
+}
+
+.btn-primary:hover:not(:disabled) {
+    background-color: #6dd5ed; /* Hover blue */
+    transform: scale(1.05);
+}
+
+.btn-secondary:hover:not(:disabled) {
+    background-color: #6dd5ed; /* Hover blue */
+    transform: scale(1.05);
+}
+
+.btn-success {
+    background-color: #27ae60;
+}
+
+.btn-success:hover:not(:disabled) {
+    background-color: #2ecc71;
+    transform: scale(1.05);
+}
+
+.btn:disabled {
+    background-color: #a1c4d4;
+    cursor: not-allowed;
+}
+
+.lesson-content {
+    text-align: left;
+    margin-top: 30px;
+}
+
+pre {
+    background-color: #e0f2f1; /* Light blue background for lesson content */
+    padding: 20px;
+    border-radius: 8px;
+    font-size: 1rem;
+    text-align: left;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-x: auto;
+    border: 1px solid #b2ebf2; /* Blue border */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .lesson-card {
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 1.8rem;
+    }
+
+    .btn {
+        padding: 10px 20px;
+        font-size: 1rem;
+    }
+}
