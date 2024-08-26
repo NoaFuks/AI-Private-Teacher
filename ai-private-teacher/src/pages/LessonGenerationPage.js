@@ -41,6 +41,7 @@ const LessonGenerationPage = () => {
         }
     };
 
+
     const handleAnswerSubmit = async (e) => {
         e.preventDefault();
         const currentQuestion = questions[currentQuestionIndex];
@@ -48,30 +49,80 @@ const LessonGenerationPage = () => {
             const response = await axios.post('http://localhost:8000/api/validate-answer', {
                 student_answer: studentAnswer,
                 correct_answer: currentQuestion.correct_answer,
-                explanation: currentQuestion.explanation
+                explanation: currentQuestion.explanation,
+                segment_index: currentSegmentIndex,  // Pass the current segment index
+                student_name: studentName,  // Pass the student's name
+                segment_content: lessonSegments[currentSegmentIndex],  // Pass the current segment content
+                question: currentQuestion.question // Include the current question
             });
             const feedbackResponse = response.data.feedback;
             setFeedback(feedbackResponse);
             speakText(feedbackResponse);
-
+    
             setShowNextSegmentButton(true);  // Show the "Next" button to go to the next segment
         } catch (error) {
             console.error('Error validating answer:', error);
         }
     };
+    
+    
+    // const handleQuestionSubmit = async (e) => {
+    //     e.preventDefault();
+    //     if (studentQuestion.trim() === '') return;  // Ensure a question was actually asked
+        
+    //     try {
+    //         const response = await axios.post('http://localhost:8000/api/handle-question', { question: studentQuestion });
+    //         const aiAnswer = response.data.answer;
+    //         setAnswerToQuestion(aiAnswer);
+    //         speakText(aiAnswer);
+    
+    //         // Save the student's question and the AI's answer to the server
+    //         await axios.post('http://localhost:8000/api/save-progress', {
+    //             student_name: studentName,
+    //             segment_index: currentSegmentIndex,
+    //             segment_content: lessonSegments[currentSegmentIndex],
+    //             student_question: studentQuestion,
+    //             answer_to_question: aiAnswer,
+    //             asked_question: true
+    //         });
+    
+    //         // Clear the student question for the next interaction
+    //         setStudentQuestion('');  // Clear input field after submission
+    //         setShowNextButton(true);  // Show the "Next" button after answering
+    //     } catch (error) {
+    //         console.error('Error handling question:', error);
+    //     }
+    // };
 
     const handleQuestionSubmit = async (e) => {
         e.preventDefault();
+        if (studentQuestion.trim() === '') return;  // Ensure a question was actually asked
+        
         try {
             const response = await axios.post('http://localhost:8000/api/handle-question', { question: studentQuestion });
-            setAnswerToQuestion(response.data.answer);
-            speakText(response.data.answer);
-            setStudentQuestion('');  // Clear the input after submission
+            const aiAnswer = response.data.answer;
+            setAnswerToQuestion(aiAnswer);
+            speakText(aiAnswer);
+    
+            // Save the student's question and the AI's answer to the server
+            await axios.post('http://localhost:8000/api/save-progress', {
+                student_name: studentName,
+                segment_index: currentSegmentIndex,
+                segment_content: lessonSegments[currentSegmentIndex],
+                student_question: studentQuestion,
+                answer_to_question: aiAnswer,
+                asked_question: true  // Flag indicating a question was asked
+            });
+    
+            // Clear the input field and prepare for the next interaction
+            setStudentQuestion('');  // Clear the student question for the next segment
             setShowNextButton(true);  // Show the "Next" button after answering
         } catch (error) {
             console.error('Error handling question:', error);
         }
     };
+    
+    
 
     const handleNoQuestion = () => {
         // Stop any currently speaking text before moving to the next segment
@@ -97,22 +148,85 @@ const LessonGenerationPage = () => {
         }
     };
 
-    const handleNextSegment = () => {
+    // const handleNextSegment = () => {
+    //     // Stop any currently speaking text before moving to the next segment
+    //     window.speechSynthesis.cancel();
+    
+    //     setShowNextSegmentButton(false);
+    //     setFeedback('');  // Clear feedback
+    //     setStudentAnswer('');  // Clear answer to question
+    //     setStudentQuestion('');  // Clear the student question for the next segment
+    //     setAnswerToQuestion('');  // Clear the AI's answer for the next segment
+    
+    //     if (currentSegmentIndex < lessonSegments.length - 1) {
+    //         setCurrentSegmentIndex(currentSegmentIndex + 1);
+    //         setCurrentQuestionIndex(0);  // Reset question index for new segment
+    //         setAskForQuestions(true);  // Ask for questions after the next segment
+    //     } else {
+    //         setFeedback('Lesson completed!');
+    //     }
+    // };
+
+    const handleNextSegment = async () => {
         // Stop any currently speaking text before moving to the next segment
         window.speechSynthesis.cancel();
-
+    
         setShowNextSegmentButton(false);
         setFeedback('');  // Clear feedback
         setStudentAnswer('');  // Clear answer to question
-
+        setStudentQuestion('');  // Clear the student question for the next segment
+        setAnswerToQuestion('');  // Clear the AI's answer for the next segment
+    
         if (currentSegmentIndex < lessonSegments.length - 1) {
+            const segmentSummary = `Summary of segment ${currentSegmentIndex + 1}: ${lessonSegments[currentSegmentIndex]}`;
+    
+            // Save the segment summary alongside other data
+            await axios.post('http://localhost:8000/api/save-progress', {
+                student_name: studentName,
+                segment_index: currentSegmentIndex,
+                segment_content: lessonSegments[currentSegmentIndex],
+                summary: segmentSummary,  // Include the summary here
+                student_question: studentQuestion,
+                answer_to_question: answerToQuestion,
+                asked_question: studentQuestion !== ''  // Flag indicating a question was asked
+            });
+    
             setCurrentSegmentIndex(currentSegmentIndex + 1);
-            setCurrentQuestionIndex(currentSegmentIndex + 1);  // Reset question for new segment
+            setCurrentQuestionIndex(0);  // Reset question index for new segment
             setAskForQuestions(true);  // Ask for questions after the next segment
         } else {
             setFeedback('Lesson completed!');
         }
     };
+    
+    
+    
+
+    const saveProgress = async (segmentIndex, segmentContent, isCorrect) => {
+        try {
+            const progressData = {
+                student_name: studentName,
+                lesson: `Segment ${segmentIndex + 1}`,
+                correct: isCorrect,  // Use the directly passed correctness value
+                explanation: questions[segmentIndex].explanation,
+                interaction_details: {
+                    segmentContent: segmentContent,
+                    questions: questions[segmentIndex],
+                    student_answer: studentAnswer,
+                    student_question: studentQuestion,  // Ensure this is managed correctly
+                    answer_to_question: answerToQuestion
+                },
+                lesson_summary: `Lesson segment ${segmentIndex + 1} completed.`
+            };
+    
+            await axios.post('http://localhost:8000/api/save-progress', progressData);
+            console.log(`Progress for segment ${segmentIndex + 1} saved successfully.`);
+        } catch (error) {
+            console.error(`Error saving progress for segment ${segmentIndex + 1}:`, error);
+        }
+    };
+    
+    
 
     const speakText = (text) => {
         if ('speechSynthesis' in window) {

@@ -356,3 +356,4 @@ if __name__ == "__main__":
             #     # print(f"Lesson generated from {pdf_file}:\n")
             #     # print(lesson)
             print("\n" + "=" * 80 + "\n")
+

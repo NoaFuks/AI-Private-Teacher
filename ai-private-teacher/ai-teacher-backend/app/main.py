@@ -80,6 +80,7 @@ async def handle_question(request: Request):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to handle question: {e}")
 
+
 @app.post("/api/validate-answer")
 async def validate_answer(request: Request):
     try:
@@ -87,15 +88,57 @@ async def validate_answer(request: Request):
         student_answer = data.get("student_answer")
         correct_answer = data.get("correct_answer")
         explanation = data.get("explanation")
+        segment_index = data.get("segment_index")  # Pass this from the client
+        student_name = data.get("student_name")  # Pass this from the client
+        segment_content = data.get("segment_content")  # Pass this from the client
+        question = data.get("question")  # Pass the question from the client
 
         if student_answer.strip().lower() == correct_answer.strip().lower():
             feedback = "Correct! Well done!"
-            return {"correct": True, "feedback": feedback}
+            isCorrect = True
         else:
             feedback = f"Incorrect. The correct answer is: {correct_answer}. {explanation}"
-            return {"correct": False, "feedback": feedback}
+            isCorrect = False
+
+        # Initialize ProgressTracker and save progress
+        progress_tracker = ProgressTracker(student_name=student_name, progress_directory=PROGRESS_DIR)
+        interaction_details = {
+            "segmentContent": segment_content,
+            "question": question,
+            "student_answer": student_answer,
+            "correct_answer": correct_answer,
+            "explanation": explanation
+        }
+        progress_tracker.update_progress(
+            lesson=f"Segment {segment_index + 1}",
+            correct=isCorrect,  # Pass isCorrect to the progress tracker
+            explanation=explanation,
+            interaction_details=interaction_details,
+            lesson_summary=f"Lesson segment {segment_index + 1} completed."
+        )
+
+        return {"correct": isCorrect, "feedback": feedback}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to validate answer: {e}")
+
+
+
+
+# @app.get("/api/get-progress")
+# async def get_progress(student_name: str):
+#     try:
+#         # Initialize the ParentProgressPage to get student progress
+#         parent_page = ParentProgressPage(progress_directory=PROGRESS_DIR)
+#         summary = parent_page.summarize_child_progress(student_name)
+#
+#         if summary:
+#             return summary
+#         else:
+#             raise HTTPException(status_code=404, detail="Progress data not found")
+#     except FileNotFoundError:
+#         raise HTTPException(status_code=404, detail="Progress data not found")
+#     except Exception as e:
+#         raise HTTPException(status_code=500, detail=f"Failed to retrieve progress: {e}")
 
 @app.get("/api/get-progress")
 async def get_progress(student_name: str):
@@ -103,6 +146,8 @@ async def get_progress(student_name: str):
         # Initialize the ParentProgressPage to get student progress
         parent_page = ParentProgressPage(progress_directory=PROGRESS_DIR)
         summary = parent_page.summarize_child_progress(student_name)
+
+        print("Progress Summary: ", summary)  # Debug log
 
         if summary:
             return summary
@@ -114,20 +159,36 @@ async def get_progress(student_name: str):
         raise HTTPException(status_code=500, detail=f"Failed to retrieve progress: {e}")
 
 
+
+
 @app.post("/api/save-progress")
 async def save_progress(request: Request):
     try:
         progress_data = await request.json()
         student_name = progress_data.get("student_name", "unknown")
+        segment_index = progress_data.get("segment_index")
+        segment_content = progress_data.get("segment_content")
+        summary = progress_data.get("summary", "")
+        student_question = progress_data.get("student_question", "")
+        answer_to_question = progress_data.get("answer_to_question", "")
+        asked_question = progress_data.get("asked_question", False)
+
+        interaction_details = {
+            "segmentContent": segment_content,
+            "question": None,  # Placeholder for choice question, if applicable
+            "student_question": student_question if asked_question else None,
+            "answer_to_question": answer_to_question if asked_question else None,
+            "asked_question": asked_question
+        }
 
         # Initialize ProgressTracker and save progress
         progress_tracker = ProgressTracker(student_name=student_name, progress_directory=PROGRESS_DIR)
         progress_tracker.update_progress(
-            lesson=progress_data.get("lesson"),
-            correct=progress_data.get("correct"),
-            explanation=progress_data.get("explanation", ""),
-            interaction_details=progress_data.get("interaction_details"),
-            lesson_summary=progress_data.get("lesson_summary", "")
+            lesson=f"Segment {segment_index + 1}",
+            correct=None,  # Not applicable here
+            explanation="",
+            interaction_details=interaction_details,
+            lesson_summary=summary
         )
 
         return {"message": "Progress saved successfully"}
@@ -135,6 +196,12 @@ async def save_progress(request: Request):
         raise HTTPException(status_code=500, detail=f"Failed to save progress: {e}")
 
 
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("app.main:app", host="127.0.0.1", port=8000, reload=True)
+
+
+
+
+
