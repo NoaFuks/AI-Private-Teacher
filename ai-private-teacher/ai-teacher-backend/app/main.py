@@ -30,20 +30,7 @@ os.makedirs(PROFILE_DIR, exist_ok=True)
 os.makedirs(PROGRESS_DIR, exist_ok=True)
 os.makedirs(PDF_DIR, exist_ok=True)
 
-# @app.post("/api/upload-pdf")
-# async def upload_pdf(file: UploadFile = File(...)):
-#     try:
-#         # Ensure the PDF directory exists
-#         os.makedirs(PDF_DIR, exist_ok=True)
-#
-#         # Save the uploaded PDF file
-#         file_path = os.path.join(PDF_DIR, file.filename)
-#         with open(file_path, "wb") as buffer:
-#             shutil.copyfileobj(file.file, buffer)
-#
-#         return {"message": "PDF uploaded successfully", "file_path": file_path}
-#     except Exception as e:
-#         raise HTTPException(status_code=500, detail=f"Failed to upload PDF: {e}")
+
 
 @app.post("/api/upload-pdf")
 async def upload_pdf(file: UploadFile = File(...), student_name: str = Form(...)):
@@ -74,65 +61,43 @@ async def save_profile(request: Request):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to save profile: {e}")
 
-# @app.post("/api/generate-lesson")
-# async def generate_lesson(request: Request):
-#     try:
-#         profile_data = await request.json()
-#         student_name = profile_data.get("name")
-#
-#         profile_path = os.path.join(PROFILE_DIR, f"{student_name.lower().replace(' ', '_')}_profile.json")
-#         if not os.path.exists(profile_path):
-#             raise HTTPException(status_code=404, detail=f"Profile for student '{student_name}' not found.")
-#
-#         with open(profile_path, 'r') as profile_file:
-#             student_profile = json.load(profile_file)
-#
-#         api_key = "sk-proj-hOTTh1Qv8iNbIumiJ3S6T3BlbkFJcB15KrFMIjwvwamTTPPp"  # Add your OpenAI key here
-#         progress_tracker = ProgressTracker(student_name=student_name, progress_directory=PROGRESS_DIR)
-#         lesson_generator = LessonGenerator(user_profile=student_profile, api_key=api_key, progress_tracker=progress_tracker)
-#
-#         pdf_files = [f for f in os.listdir(PDF_DIR) if f.endswith('.pdf')]
-#         if not pdf_files:
-#             raise HTTPException(status_code=404, detail="No PDF files found in the specified directory.")
-#
-#         pdf_path = os.path.join(PDF_DIR, pdf_files[0])
-#
-#         # Generate the lesson content and questions
-#         lesson_data = lesson_generator.generate_lesson_in_segments(pdf_path)
-#         return lesson_data
-#     except Exception as e:
-#         raise HTTPException(status_code=500, detail=f"Failed to generate lesson: {e}")
+
 @app.post("/api/generate-lesson")
-async def generate_lesson(request: Request):
+async def generate_lesson(name: str = Form(...), file: UploadFile = File(None)):
     try:
-        profile_data = await request.json()
-        student_name = profile_data.get("name")
+        student_name = name.lower().replace(' ', '_')
+        student_dir = os.path.join(PDF_DIR, student_name)
+        os.makedirs(student_dir, exist_ok=True)
 
-        profile_path = os.path.join(PROFILE_DIR, f"{student_name.lower().replace(' ', '_')}_profile.json")
-        if not os.path.exists(profile_path):
-            raise HTTPException(status_code=404, detail=f"Profile for student '{student_name}' not found.")
+        # If a PDF is uploaded, save it in the student's directory
+        if file:
+            file_path = os.path.join(student_dir, file.filename)
+            with open(file_path, "wb") as buffer:
+                shutil.copyfileobj(file.file, buffer)
 
-        with open(profile_path, 'r') as profile_file:
-            student_profile = json.load(profile_file)
-
-        api_key = "sk-proj-hOTTh1Qv8iNbIumiJ3S6T3BlbkFJcB15KrFMIjwvwamTTPPp"  # Add your OpenAI key here
-        progress_tracker = ProgressTracker(student_name=student_name, progress_directory=PROGRESS_DIR)
-        lesson_generator = LessonGenerator(user_profile=student_profile, api_key=api_key, progress_tracker=progress_tracker)
-
-        # Look for PDFs in the student's directory
-        student_dir = os.path.join(PDF_DIR, student_name.lower().replace(' ', '_'))
+        # Find the latest PDF in the student's directory to generate the lesson
         pdf_files = [f for f in os.listdir(student_dir) if f.endswith('.pdf')]
         if not pdf_files:
             raise HTTPException(status_code=404, detail="No PDF files found for this student.")
 
-        pdf_path = os.path.join(student_dir, pdf_files[0])
+        pdf_path = os.path.join(student_dir, pdf_files[-1])  # Use the most recently uploaded PDF
 
-        # Generate the lesson content and questions
+        profile_path = os.path.join(PROFILE_DIR, f"{student_name}_profile.json")
+        if not os.path.exists(profile_path):
+            raise HTTPException(status_code=404, detail=f"Profile for student '{name}' not found.")
+
+        with open(profile_path, 'r') as profile_file:
+            student_profile = json.load(profile_file)
+
+        api_key = "sk-proj-hOTTh1Qv8iNbIumiJ3S6T3BlbkFJcB15KrFMIjwvwamTTPPp"
+        progress_tracker = ProgressTracker(student_name=name, progress_directory=PROGRESS_DIR)
+        lesson_generator = LessonGenerator(user_profile=student_profile, api_key=api_key, progress_tracker=progress_tracker)
+
         lesson_data = lesson_generator.generate_lesson_in_segments(pdf_path)
         return lesson_data
+
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to generate lesson: {e}")
-
 
 
 @app.post("/api/handle-question")
