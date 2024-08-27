@@ -6,6 +6,8 @@ import os
 import json
 
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi import FastAPI, Request, HTTPException, File, UploadFile, Form
+import shutil
 
 app = FastAPI()
 
@@ -28,6 +30,38 @@ os.makedirs(PROFILE_DIR, exist_ok=True)
 os.makedirs(PROGRESS_DIR, exist_ok=True)
 os.makedirs(PDF_DIR, exist_ok=True)
 
+# @app.post("/api/upload-pdf")
+# async def upload_pdf(file: UploadFile = File(...)):
+#     try:
+#         # Ensure the PDF directory exists
+#         os.makedirs(PDF_DIR, exist_ok=True)
+#
+#         # Save the uploaded PDF file
+#         file_path = os.path.join(PDF_DIR, file.filename)
+#         with open(file_path, "wb") as buffer:
+#             shutil.copyfileobj(file.file, buffer)
+#
+#         return {"message": "PDF uploaded successfully", "file_path": file_path}
+#     except Exception as e:
+#         raise HTTPException(status_code=500, detail=f"Failed to upload PDF: {e}")
+
+@app.post("/api/upload-pdf")
+async def upload_pdf(file: UploadFile = File(...), student_name: str = Form(...)):
+    try:
+        # Create a directory specific to the student if it doesn't exist
+        student_dir = os.path.join(PDF_DIR, student_name.lower().replace(' ', '_'))
+        os.makedirs(student_dir, exist_ok=True)
+
+        # Save the uploaded PDF file in the student's directory
+        file_path = os.path.join(student_dir, file.filename)
+        with open(file_path, "wb") as buffer:
+            shutil.copyfileobj(file.file, buffer)
+
+        return {"message": "PDF uploaded successfully", "file_path": file_path}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to upload PDF: {e}")
+
+
 @app.post("/api/save-profile")
 async def save_profile(request: Request):
     try:
@@ -40,6 +74,34 @@ async def save_profile(request: Request):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to save profile: {e}")
 
+# @app.post("/api/generate-lesson")
+# async def generate_lesson(request: Request):
+#     try:
+#         profile_data = await request.json()
+#         student_name = profile_data.get("name")
+#
+#         profile_path = os.path.join(PROFILE_DIR, f"{student_name.lower().replace(' ', '_')}_profile.json")
+#         if not os.path.exists(profile_path):
+#             raise HTTPException(status_code=404, detail=f"Profile for student '{student_name}' not found.")
+#
+#         with open(profile_path, 'r') as profile_file:
+#             student_profile = json.load(profile_file)
+#
+#         api_key = "sk-proj-hOTTh1Qv8iNbIumiJ3S6T3BlbkFJcB15KrFMIjwvwamTTPPp"  # Add your OpenAI key here
+#         progress_tracker = ProgressTracker(student_name=student_name, progress_directory=PROGRESS_DIR)
+#         lesson_generator = LessonGenerator(user_profile=student_profile, api_key=api_key, progress_tracker=progress_tracker)
+#
+#         pdf_files = [f for f in os.listdir(PDF_DIR) if f.endswith('.pdf')]
+#         if not pdf_files:
+#             raise HTTPException(status_code=404, detail="No PDF files found in the specified directory.")
+#
+#         pdf_path = os.path.join(PDF_DIR, pdf_files[0])
+#
+#         # Generate the lesson content and questions
+#         lesson_data = lesson_generator.generate_lesson_in_segments(pdf_path)
+#         return lesson_data
+#     except Exception as e:
+#         raise HTTPException(status_code=500, detail=f"Failed to generate lesson: {e}")
 @app.post("/api/generate-lesson")
 async def generate_lesson(request: Request):
     try:
@@ -57,17 +119,21 @@ async def generate_lesson(request: Request):
         progress_tracker = ProgressTracker(student_name=student_name, progress_directory=PROGRESS_DIR)
         lesson_generator = LessonGenerator(user_profile=student_profile, api_key=api_key, progress_tracker=progress_tracker)
 
-        pdf_files = [f for f in os.listdir(PDF_DIR) if f.endswith('.pdf')]
+        # Look for PDFs in the student's directory
+        student_dir = os.path.join(PDF_DIR, student_name.lower().replace(' ', '_'))
+        pdf_files = [f for f in os.listdir(student_dir) if f.endswith('.pdf')]
         if not pdf_files:
-            raise HTTPException(status_code=404, detail="No PDF files found in the specified directory.")
+            raise HTTPException(status_code=404, detail="No PDF files found for this student.")
 
-        pdf_path = os.path.join(PDF_DIR, pdf_files[0])
+        pdf_path = os.path.join(student_dir, pdf_files[0])
 
         # Generate the lesson content and questions
         lesson_data = lesson_generator.generate_lesson_in_segments(pdf_path)
         return lesson_data
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to generate lesson: {e}")
+
+
 
 @app.post("/api/handle-question")
 async def handle_question(request: Request):
