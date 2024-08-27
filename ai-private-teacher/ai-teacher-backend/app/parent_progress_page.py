@@ -41,82 +41,59 @@
 #         else:
 #             return "Needs improvement. The child struggled with the material and would benefit from extra practice or review."
 #
+#
 #     def summarize_child_progress(self, student_name):
 #         progress_data = self.get_child_progress(student_name)
 #         if not progress_data:
 #             return f"No progress data available for {student_name}."
 #
-#         total_lessons = len(progress_data)
 #         correct_answers = 0
 #         incorrect_answers = 0
 #         total_questions = 0
 #         topics_covered = []
+#         last_lesson_name = ""
 #
+#         # Iterate through the lessons to accumulate data and find the last lesson name
 #         for lesson_data in progress_data:
-#             for segment in lesson_data.get('segments', []):
+#             segments = lesson_data.get('segments', [])
+#             if segments:
+#                 last_lesson_name = segments[-1].get('lesson_name', last_lesson_name)  # Update last lesson name
+#             for segment in segments:
 #                 if segment.get('correct') is not None:
 #                     total_questions += 1
 #                     if segment['correct']:
 #                         correct_answers += 1
 #                     else:
 #                         incorrect_answers += 1
-#                 topics_covered.append(segment.get('lesson_name', 'Unknown topic'))
+#
+#                 # Extract the summary of each segment and add it to topics_covered
+#                 segment_summary = segment.get('lesson_summary', 'No summary available')
+#                 topics_covered.append(segment_summary)
 #
 #         # Generate AI opinion on performance
 #         ai_opinion = self.generate_ai_opinion(correct_answers, total_questions)
 #
 #         summary = {
-#             "Total Lessons": total_lessons,
+#             "Total Lessons": last_lesson_name,  # Use the last lesson name
 #             "Total Questions": total_questions,
 #             "Correct Answers": correct_answers,
 #             "Incorrect Answers": incorrect_answers,
-#             "Topics Covered": list(set(topics_covered)),  # Removing duplicate topics
+#             "Topics Covered": topics_covered,  # Return the summaries of each segment
 #             "AI Opinion": ai_opinion
 #         }
 #
 #         return summary
-#
-#     def get_all_children_progress(self):
-#         children_progress = {}
-#         for file_name in os.listdir(self.progress_directory):
-#             if file_name.endswith('_progress.json'):
-#                 student_name = '_'.join(file_name.split('_')[:-2])  # Extract the student's name
-#                 progress_summary = self.summarize_child_progress(student_name)
-#                 if progress_summary:
-#                     children_progress[student_name] = progress_summary
-#
-#         return children_progress
-#
-#     def save_progress_to_json(self):
-#         summary = self.get_all_children_progress()
-#
-#         if not summary:
-#             print("No data to save.")
-#             return
-#
-#         try:
-#             with open(self.output_file, 'w') as file:
-#                 json.dump(summary, file, indent=4)
-#             print(f"Progress summary saved to {self.output_file}")
-#         except Exception as e:
-#             print(f"Failed to save progress summary: {e}")
-#
-#
-# # Example usage:
-# if __name__ == "__main__":
-#     parent_page = ParentProgressPage()
-#
-#     # Save progress summary for all children to a JSON file
-#     parent_page.save_progress_to_json()
 
 
 import json
 import os
+import requests
 
 class ParentProgressPage:
-    def __init__(self, progress_directory="progress_data", output_file="children_progress_summary.json"):
+    def __init__(self, progress_directory="progress_data", output_file="children_progress_summary.json", api_key=None):
         self.progress_directory = progress_directory
         self.output_file = output_file
+        self.api_key = "sk-proj-hOTTh1Qv8iNbIumiJ3S6T3BlbkFJcB15KrFMIjwvwamTTPPp"
         if not os.path.exists(progress_directory):
             raise FileNotFoundError(f"The progress directory '{progress_directory}' does not exist.")
 
@@ -143,46 +120,129 @@ class ParentProgressPage:
     def generate_ai_opinion(self, correct_answers, total_questions):
         performance_ratio = correct_answers / total_questions if total_questions > 0 else 0
 
-        if performance_ratio == 1:
+        if (performance_ratio == 1):
             return "Excellent performance! The child answered all questions correctly and demonstrated a strong understanding of the material."
-        elif performance_ratio >= 0.75:
+        elif (performance_ratio >= 0.75):
             return "Good performance! The child answered most questions correctly and is grasping the key concepts well."
-        elif performance_ratio >= 0.5:
+        elif (performance_ratio >= 0.5):
             return "Fair performance. The child has a basic understanding of the material but may need some additional review to reinforce key concepts."
         else:
             return "Needs improvement. The child struggled with the material and would benefit from extra practice or review."
+
+    # def summarize_child_progress(self, student_name):
+    #     progress_data = self.get_child_progress(student_name)
+    #     if not progress_data:
+    #         return f"No progress data available for {student_name}."
+    #
+    #     correct_answers = 0
+    #     incorrect_answers = 0
+    #     total_questions = 0
+    #     topics_covered = []
+    #     last_lesson_name = ""
+    #
+    #     # Iterate through the lessons to accumulate data and find the last lesson name
+    #     for lesson_data in progress_data:
+    #         segments = lesson_data.get('segments', [])
+    #         if segments:
+    #             last_lesson_name = segments[-1].get('lesson_name', last_lesson_name)  # Update last lesson name
+    #         for segment in segments:
+    #             if segment.get('correct') is not None:
+    #                 total_questions += 1
+    #                 if segment['correct']:
+    #                     correct_answers += 1
+    #                 else:
+    #                     incorrect_answers += 1
+    #
+    #             # Extract the summary of each segment and summarize it
+    #             segment_summary = segment.get('lesson_summary', 'No summary available')
+    #             summarized_topic = self.summarize_topic(segment_summary)
+    #             topics_covered.append(summarized_topic)
+    #
+    #     # Generate AI opinion on performance
+    #     ai_opinion = self.generate_ai_opinion(correct_answers, total_questions)
+    #
+    #     summary = {
+    #         "Total Lessons": last_lesson_name,  # Use the last lesson name
+    #         "Total Questions": total_questions,
+    #         "Correct Answers": correct_answers,
+    #         "Incorrect Answers": incorrect_answers,
+    #         "Topics Covered": topics_covered,  # Return the summarized topics
+    #         "AI Opinion": ai_opinion
+    #     }
+    #
+    #     return summary
 
     def summarize_child_progress(self, student_name):
         progress_data = self.get_child_progress(student_name)
         if not progress_data:
             return f"No progress data available for {student_name}."
 
-        total_lessons = len(progress_data)
         correct_answers = 0
         incorrect_answers = 0
         total_questions = 0
         topics_covered = []
+        last_lesson_name = ""
 
+        # Iterate through the lessons to accumulate data and find the last lesson name
         for lesson_data in progress_data:
-            for segment in lesson_data.get('segments', []):
+            segments = lesson_data.get('segments', [])
+            if segments:
+                last_lesson_name = segments[-1].get('lesson_name', last_lesson_name)  # Update last lesson name
+            for segment in segments:
                 if segment.get('correct') is not None:
                     total_questions += 1
                     if segment['correct']:
                         correct_answers += 1
                     else:
                         incorrect_answers += 1
-                topics_covered.append(segment.get('lesson_name', 'Unknown topic'))
+
+                # Extract the summary of each segment and summarize it
+                segment_summary = segment.get('lesson_summary', 'No summary available')
+                if "lesson" not in segment_summary.lower():  # Exclude summaries containing "lesson"
+                    summarized_topic = self.summarize_topic(segment_summary)
+                    topics_covered.append(summarized_topic)
 
         # Generate AI opinion on performance
         ai_opinion = self.generate_ai_opinion(correct_answers, total_questions)
 
         summary = {
-            "Total Lessons": total_lessons,
+            "Total Lessons": last_lesson_name,  # Use the last lesson name
             "Total Questions": total_questions,
             "Correct Answers": correct_answers,
             "Incorrect Answers": incorrect_answers,
-            "Topics Covered": list(set(topics_covered)),  # Removing duplicate topics
+            "Topics Covered": topics_covered,  # Return the summarized topics
             "AI Opinion": ai_opinion
         }
 
         return summary
+
+    def summarize_topic(self, summary):
+        # Check if the summary can be shortened manually
+        words = summary.split()
+        if len(words) <= 3:
+            return summary  # Already 3 words or less
+        else:
+            # Send a request to the AI to summarize it in 2-3 words
+            prompt = f"Summarize the following topic in 2-3 words: {summary}"
+            summarized_topic = self.request_ai_summary(prompt)
+            return summarized_topic
+
+    def request_ai_summary(self, prompt):
+        if not self.api_key:
+            return "Summary unavailable"  # Fallback if no API key is provided
+        url = 'https://api.openai.com/v1/chat/completions'
+        headers = {
+            'Content-Type': 'application/json',
+            'Authorization': f'Bearer {self.api_key}'
+        }
+        data = {
+            'model': 'gpt-3.5-turbo',
+            'messages': [{'role': 'user', 'content': prompt}],
+            'max_tokens': 10  # Limit to a short response
+        }
+        response = requests.post(url, headers=headers, json=data)
+        if response.status_code == 200:
+            result = response.json()
+            return result['choices'][0]['message']['content'].strip()
+        else:
+            return "Summary unavailable"  # Fallback if the request fails

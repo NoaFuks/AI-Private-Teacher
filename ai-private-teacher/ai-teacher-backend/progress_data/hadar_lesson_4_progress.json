@@ -1,0 +1,23 @@
+{
+    "segments": [
+        {
+            "lesson_summary": "Lesson segment 2 completed.",
+            "correct": true,
+            "attempts": 1,
+            "explanations": [
+                "In third-grade math, we learn about the decimal structure when working with natural numbers up to 10,000, where each digit's place represents a different value."
+            ],
+            "details": [
+                {
+                    "interaction_details": [],
+                    "choice_question": "Question: What do we learn about in third-grade math concerning numbers up to 10,000?\na) Alphabet letters\nb) Prime numbers\nc) Decimal structure\nd) Colors",
+                    "student_question": null,
+                    "answer_to_question": null,
+                    "asked_question": false
+                }
+            ],
+            "part_number": 2,
+            "lesson_name": "Segment 2"
+        }
+    ]
+}

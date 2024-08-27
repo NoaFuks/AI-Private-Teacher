@@ -1,46 +1,3 @@
-// // src/pages/ParentProgressPage.js
-// import React, { useState, useEffect } from 'react';
-// import axios from 'axios';
-// import Icon from '../components/Icon';
-// import ReturnButton from '../components/ReturnButton';
-// import './ParentProgressPage.css';
-
-// const ParentProgressPage = () => {
-//     const [progressData, setProgressData] = useState({});
-
-//     useEffect(() => {
-//         // Fetch progress data from the backend
-//         axios.get('http://localhost:8000/api/get-progress?student_name=child')
-//             .then(response => {
-//                 setProgressData(response.data);
-//             })
-//             .catch(error => {
-//                 console.error('Error fetching progress:', error);
-//             });
-//     }, []);
-
-//     return (
-//         <div className="progress-page">
-//             <div className="progress-card">
-//                 <Icon size={80} />
-//                 <h1 className="text-center mb-4">Parent Progress Page</h1>
-//                 {Object.keys(progressData).length > 0 ? (
-//                     <div className="progress-content">
-//                         <h2>Student Progress</h2>
-//                         <pre>{JSON.stringify(progressData, null, 2)}</pre>
-//                     </div>
-//                 ) : (
-//                     <p>No progress data available.</p>
-//                 )}
-//                 <ReturnButton />
-//             </div>
-//         </div>
-//     );
-// };
-
-// export default ParentProgressPage;
-
-
 import React, { useState } from 'react';
 import axios from 'axios';
 import Icon from '../components/Icon';
@@ -75,6 +32,11 @@ const ParentProgressPage = () => {
         }
     };
 
+    const extractLessonNumber = (lessonName) => {
+        const match = lessonName.match(/\d+/);  // Use regex to find numbers in the string
+        return match ? match[0] : lessonName;  // Return the number if found, else return the original string
+    };
+
     return (
         <div className="progress-page">
             <div className="progress-card">
@@ -96,11 +58,19 @@ const ParentProgressPage = () => {
                 {progressData ? (
                     <div className="progress-content">
                         <h2>Student Progress</h2>
-                        <p><strong>Total Lessons:</strong> {progressData['Total Lessons']}</p>
+                        {/* <p><strong>Total Lessons:</strong> {progressData['Total Lessons']}</p> */}
+                        <p><strong>Total Lessons:</strong> {extractLessonNumber(progressData['Total Lessons'])}</p>
                         <p><strong>Total Questions:</strong> {progressData['Total Questions']}</p>
                         <p><strong>Correct Answers:</strong> {progressData['Correct Answers']}</p>
                         <p><strong>Incorrect Answers:</strong> {progressData['Incorrect Answers']}</p>
-                        <p><strong>Topics Covered:</strong> {Array.isArray(progressData['Topics Covered']) ? progressData['Topics Covered'].join(', ') : 'No topics covered'}</p>
+                        <p className="topics-title"><strong>Topics Covered:</strong></p>
+                        <ol>
+                            {Array.isArray(progressData['Topics Covered']) ? progressData['Topics Covered']
+                                .filter(topic => topic)  // Filter out empty or falsy values
+                                .map((topic, index) => (
+                                    <li key={index}>{topic}</li>
+                                )) : 'No topics covered'}
+                        </ol>
                         <p><strong>AI Opinion:</strong> {progressData['AI Opinion']}</p>
                     </div>
                 ) : (

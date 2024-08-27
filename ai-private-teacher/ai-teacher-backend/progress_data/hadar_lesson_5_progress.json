@@ -1,0 +1,21 @@
+{
+    "segments": [
+        {
+            "lesson_summary": "Summary of segment 2: In math, we learn about addition and subtraction in whole numbers first. We use rules like commutative, associative, and distributive properties to make calculations easier. We also practice adding and subtracting different numbers. After mastering this, we move on to multiplication and division, where we learn the times table and how to multiply by double-digit numbers. We also learn about division within hundreds and what to do with remainders. It's important to understand the order of operations and how to use parentheses when solving problems. We also practice more complex questions involving multiplication, division, and additional steps to reinforce our learning.",
+            "correct": null,
+            "attempts": 1,
+            "explanations": [],
+            "details": [
+                {
+                    "interaction_details": [],
+                    "choice_question": null,
+                    "student_question": null,
+                    "answer_to_question": null,
+                    "asked_question": false
+                }
+            ],
+            "part_number": 2,
+            "lesson_name": "Segment 2"
+        }
+    ]
+}

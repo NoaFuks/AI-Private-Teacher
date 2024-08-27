@@ -123,23 +123,6 @@ async def validate_answer(request: Request):
 
 
 
-
-# @app.get("/api/get-progress")
-# async def get_progress(student_name: str):
-#     try:
-#         # Initialize the ParentProgressPage to get student progress
-#         parent_page = ParentProgressPage(progress_directory=PROGRESS_DIR)
-#         summary = parent_page.summarize_child_progress(student_name)
-#
-#         if summary:
-#             return summary
-#         else:
-#             raise HTTPException(status_code=404, detail="Progress data not found")
-#     except FileNotFoundError:
-#         raise HTTPException(status_code=404, detail="Progress data not found")
-#     except Exception as e:
-#         raise HTTPException(status_code=500, detail=f"Failed to retrieve progress: {e}")
-
 @app.get("/api/get-progress")
 async def get_progress(student_name: str):
     try:
@@ -200,8 +183,5 @@ async def save_progress(request: Request):
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("app.main:app", host="127.0.0.1", port=8000, reload=True)
-
-
-
 
 

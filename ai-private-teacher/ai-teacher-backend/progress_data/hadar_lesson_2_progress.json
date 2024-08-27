@@ -1,0 +1,23 @@
+{
+    "segments": [
+        {
+            "lesson_summary": "Lesson segment 1 completed.",
+            "correct": false,
+            "attempts": 1,
+            "explanations": [
+                "In math, we learn about addition and subtraction in whole numbers first before moving on to other topics. This foundation helps build our understanding of more complex mathematical concepts."
+            ],
+            "details": [
+                {
+                    "interaction_details": [],
+                    "choice_question": "Question: What is the first topic we learn about in math concerning whole numbers?\na) Multiplication and division\nb) Algebraic expressions \nc) Addition and subtraction\nd) Order of operations",
+                    "student_question": null,
+                    "answer_to_question": null,
+                    "asked_question": false
+                }
+            ],
+            "part_number": 2,
+            "lesson_name": "Segment 1"
+        }
+    ]
+}

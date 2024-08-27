@@ -1,0 +1,21 @@
+{
+    "segments": [
+        {
+            "lesson_summary": "Summary of segment 1: In third-grade math, we start working with natural numbers in the thousands, up to 10,000. We learn about the decimal structure, where each digit's place represents a different value. We also explore how numbers can be multiplied or divided by 10 and 100 to make them larger or smaller. We then move on to the Hebrew alphabet letters from Aleph to Tav. Lastly, we start working with basic arithmetic operations like addition, subtraction, multiplication, and division within the realm of numbers in the thousands.",
+            "correct": null,
+            "attempts": 1,
+            "explanations": [],
+            "details": [
+                {
+                    "interaction_details": [],
+                    "choice_question": null,
+                    "student_question": null,
+                    "answer_to_question": null,
+                    "asked_question": false
+                }
+            ],
+            "part_number": 2,
+            "lesson_name": "Segment 1"
+        }
+    ]
+}
