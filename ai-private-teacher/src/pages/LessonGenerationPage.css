@@ -78,6 +78,7 @@ h1 {
     transform: scale(1.05);
 }
 
+
 .btn-secondary:hover:not(:disabled) {
     background-color: #6dd5ed; /* Hover blue */
     transform: scale(1.05);
@@ -90,6 +91,10 @@ h1 {
 .btn-success:hover:not(:disabled) {
     background-color: #2ecc71;
     transform: scale(1.05);
+}
+
+.btn-record {
+    background-color: midnightblue;
 }
 
 .btn:disabled {

@@ -1,0 +1,21 @@
+{
+    "segments": [
+        {
+            "lesson_summary": "Summary of segment 1: In math, we often work with natural numbers, which are whole numbers like 1, 2, 3, etc. The decimal structure is another important concept, where numbers are broken down into parts like tenths, hundredths, and thousandths. When we increase a number by 10 or 100, we are making it ten or a hundred times larger, and when we decrease it, we are making it smaller. We also use letters like A to Z in math to represent values or variables in equations. Understanding arithmetic operations like addition, subtraction, multiplication, and division in the realm of natural numbers is fundamental to solving math problems effectively.",
+            "correct": null,
+            "attempts": 1,
+            "explanations": [],
+            "details": [
+                {
+                    "interaction_details": [],
+                    "choice_question": null,
+                    "student_question": null,
+                    "answer_to_question": null,
+                    "asked_question": false
+                }
+            ],
+            "part_number": 2,
+            "lesson_name": "Segment 1"
+        }
+    ]
+}

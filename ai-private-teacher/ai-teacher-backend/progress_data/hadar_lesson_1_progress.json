@@ -1,0 +1,21 @@
+{
+    "segments": [
+        {
+            "lesson_summary": "",
+            "correct": null,
+            "attempts": 1,
+            "explanations": [],
+            "details": [
+                {
+                    "interaction_details": [],
+                    "choice_question": null,
+                    "student_question": "what is multiply",
+                    "answer_to_question": "Multiplication is a mathematical operation that involves adding a number to itself a certain number of times. It is represented by using the \"x\" symbol or by simply placing numbers next to each other. For example, 3 x 4 can be thought of as adding 3 four times, which equals 12.",
+                    "asked_question": true
+                }
+            ],
+            "part_number": 2,
+            "lesson_name": "Segment 1"
+        }
+    ]
+}

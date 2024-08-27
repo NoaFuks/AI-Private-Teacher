@@ -19,6 +19,7 @@ const LessonGenerationPage = () => {
     const [showNextButton, setShowNextButton] = useState(false);
     const [showNextSegmentButton, setShowNextSegmentButton] = useState(false);
     const [pdfFile, setPdfFile] = useState(null); // New state for the uploaded PDF
+    const [isListening, setIsListening] = useState(false); // Manage speech recognition state
 
     useEffect(() => {
         if (lessonSegments.length > 0 && currentSegmentIndex < lessonSegments.length) {
@@ -155,6 +156,46 @@ const LessonGenerationPage = () => {
         }
     };
 
+    // Function to handle voice input using the Web Speech API
+    const handleVoiceInput = () => {
+        const recognition = new window.webkitSpeechRecognition();
+        recognition.lang = 'en-US';
+        recognition.continuous = false;
+        recognition.interimResults = false;
+
+        recognition.onstart = () => {
+            setIsListening(true);
+        };
+
+        recognition.onresult = (event) => {
+            let transcript = event.results[0][0].transcript;
+            if (transcript === "one" || transcript === "won"){
+                transcript = 1;
+            }
+            else if (transcript === "two" || transcript === "to" || transcript === "too"){
+                transcript = 2;
+            }
+            else if (transcript === "three" || transcript === "tree"){
+                transcript = 3;
+            }
+            else if (transcript === "four" || transcript === "for"){
+                transcript = 4;
+            }
+            setStudentAnswer(transcript);  // Set the answer to the recognized speech
+            setStudentQuestion(transcript);
+        };
+
+        recognition.onerror = (event) => {
+            console.error('Error recognizing speech:', event.error);
+        };
+
+        recognition.onend = () => {
+            setIsListening(false);  // Stop listening once the input is captured
+        };
+
+        recognition.start();
+    };
+
     const speakText = (text) => {
         if ('speechSynthesis' in window) {
             window.speechSynthesis.cancel();
@@ -187,13 +228,14 @@ const LessonGenerationPage = () => {
                             />
                         </div>
                         <div className="form-group mb-3">
-                            <label htmlFor="pdfFile">Upload PDF for Lesson (Optional):</label>
+                            <label htmlFor="pdfFile">Upload PDF for Lesson:</label>
                             <input
                                 type="file"
                                 id="pdfFile"
                                 className="form-control"
                                 onChange={handlePdfUpload}
                                 accept="application/pdf"
+                                required
                             />
                         </div>
                         <div className="d-grid gap-2">
@@ -214,6 +256,11 @@ const LessonGenerationPage = () => {
                             <div className="question-section mt-4">
                                 <h3>Do you have any questions?</h3>
                                 <form onSubmit={handleQuestionSubmit}>
+                                    <div>
+                                        <button type="button" className="btn btn-primary" onClick={handleVoiceInput}>
+                                            {isListening ? 'Listening...' : 'Record question'}
+                                        </button>
+                                    </div>
                                     <div className="form-group mb-3">
                                         <input
                                             type="text"
@@ -224,11 +271,11 @@ const LessonGenerationPage = () => {
                                         />
                                     </div>
                                     <button type="submit" className="btn btn-primary">Ask Question</button>
-                                    <button type="button" className="btn btn-secondary ml-2" onClick={handleNoQuestion}>
+                                    <button type="button" className="btn btn-secondary" onClick={handleNoQuestion}>
                                         No Question
                                     </button>
                                 </form>
-                                {answerToQuestion && <div className="answer mt-3">{answerToQuestion}</div>}
+                                {answerToQuestion && <div className="answer">{answerToQuestion}</div>}
                             </div>
                         ) : (
                             <>
@@ -236,7 +283,12 @@ const LessonGenerationPage = () => {
                                     <div className="question-section mt-4">
                                         <h3>{questions[currentQuestionIndex].question}</h3>
                                         <form onSubmit={handleAnswerSubmit}>
-                                            <div className="form-group mb-3">
+                                            <div>
+                                                <button type="button" className="btn btn-primary" onClick={handleVoiceInput}>
+                                                    {isListening ? 'Listening...' : 'Record Answer'}
+                                                </button>
+                                            </div>
+                                            <div className="form-group">
                                                 <input
                                                     type="text"
                                                     className="form-control"

@@ -4,22 +4,13 @@ import requests
 import json
 import os
 import random
-# import pyttsx3
-# import speech_recognition as sr
 from openai import OpenAI
-# import timeout
-
 
 class LessonGenerator:
     def __init__(self, user_profile, api_key, progress_tracker):
         self.user_profile = user_profile
         self.api_key = api_key
         self.client = OpenAI(api_key=api_key)
-#         self.tts_engine = pyttsx3.init()
-#         self.tts_engine.setProperty('rate', 150)  # Adjust the rate if needed
-#         self.recognizer = sr.Recognizer()
-#         self.microphone = sr.Microphone()
-
         self.progress_tracker = progress_tracker
 
 
@@ -73,100 +64,6 @@ class LessonGenerator:
         response = self._call_openai_api(prompt, max_tokens=150)
         return response.get('choices', [{}])[0].get('message', {}).get('content', '').strip()
 
-#     def generate_lesson(self, pdf_path):
-#         text = self.extract_text_from_pdf(pdf_path)
-#         if not text:
-#             return "No text extracted from the PDF."
-#
-#         # Extract a dynamic lesson topic from the content
-#         lesson_topic = self.extract_topic_from_content(text)
-#
-#         # Add a brief summary of the lesson at the beginning
-#         lesson_summary = f"Today's topic: {lesson_topic}"
-#         self.speak_text(lesson_summary)
-#
-#         # Initialize lesson content and start tracking time
-#         lesson_content = lesson_summary + "\n\n"
-#         start_time = time.time()  # Record the start time of the lesson
-#         max_lesson_duration = 300  # 5 minutes
-#
-#         # Split the text into segments for processing
-#         segments = self.split_text_into_segments(text)
-#
-#         for segment in segments:
-#             current_time = time.time()
-#             lesson_duration = current_time - start_time
-#
-#             if lesson_duration >= max_lesson_duration:
-#                 print("Lesson time is up. The lesson will end now.")
-#                 self.speak_text("Time's up for today's lesson. We will continue next time.")
-#                 break  # Stop the lesson if the time limit is reached
-#
-#             long_paragraph = self.create_long_paragraph(segment)
-#             lesson_content += long_paragraph + "\n\n"
-#             self.speak_text(long_paragraph)
-#
-#             example_question, example_answer = self.create_example_question(long_paragraph)
-#             lesson_content += example_question + "\n" + example_answer + "\n\n"
-#             self.speak_text("Example " + example_question)
-#             self.speak_text("Answer: " + example_answer)
-#
-#             personalized_question, correct_answer, explanation = self.create_personalized_question(long_paragraph)
-#             lesson_content += personalized_question + "\n\n"
-#             self.speak_text(personalized_question)
-#
-#             print("Please answer the answer letter:")
-#             student_answer = self.listen_to_student()
-#
-#             print(f"Student's answer: {student_answer}\n")
-#             print(f"Correct answer: {correct_answer}\n")
-#
-#             # Normalize the student's answer
-#             if student_answer in ["hey", "yay", "hi", "play"]:
-#                 student_answer = "a"
-#             elif student_answer in ["bee", "be", "b", "bi", "beat"]:
-#                 student_answer = "b"
-#             elif student_answer in ["see", "sea", "cee", "c", "v", "sing"]:
-#                 student_answer = "c"
-#             elif student_answer in ["gee"]:
-#                 student_answer = "d"
-#
-#             correct = 1 if str(correct_answer).strip().lower() == student_answer else 0
-#             feedback = "Correct! Well done!" if correct else f"Incorrect. The correct answer is: {correct_answer}\nExplanation: {explanation}"
-#             lesson_content += f"Feedback: {feedback}\n\n"
-#             self.speak_text(feedback)
-#
-#             # Collect interaction details
-#             interaction_details = {
-#                 "student_answer": student_answer,
-#                 "correct_answer": correct_answer,
-#                 "feedback": feedback
-#             }
-#
-#             # Ask if the student has a question
-#             self.speak_text("Do you have any questions related to this part? (Please say 'yes' or 'no')")
-#             has_question = str(self.listen_to_student()).strip().lower()
-#
-#             student_questions = []
-#             if has_question in ["yes", "y"]:
-#                 student_question_answer = self.ask_student_question()
-#                 lesson_content += f"Student's Question: {student_question_answer}\n\n"
-#                 student_questions.append(student_question_answer)
-#
-#             # Update progress and include the lesson number in the file name
-#             self.progress_tracker.update_progress(
-#                 lesson_topic,
-#                 correct,
-#                 explanation,
-#                 interaction_details={
-#                     "interaction_details": [interaction_details],
-#                     "student_questions": student_questions
-#                 },
-#                 lesson_summary=lesson_summary
-#             )
-#
-#         return lesson_content
-
     def extract_topic_from_content(self, text):
         # Use a simple heuristic or NLP-based method to extract the main topic
         prompt = f"Extract the main topic from the following text:\n\n{text[:1000]}"  # Use the first 1000 characters
@@ -200,28 +97,6 @@ class LessonGenerator:
         response = self._call_openai_api(prompt, max_tokens=300)
         return response.get('choices', [{}])[0].get('message', {}).get('content', '').strip()
 
-    def create_example_question(self, long_paragraph):
-        learning_preferences = ', '.join(self.user_profile.get("learning_preferences", ["unknown learning preferences"]))
-        age = self.user_profile.get("age", "unknown age")
-        prompt = f"Create an example question and provide an answer with an explanation based on the following " \
-                 f"paragraph to help a {age}-year-old student understand better. " \
-                 f"Consider the student's learning preferences: {learning_preferences}.\n\n{long_paragraph}" \
-                 f"Here is an example of how it should look exactly:\n " \
-                 f"Question: How many legs does a dog have?\n" \
-                 f"a) 3\n" \
-                 f"b) 4\n" \
-                 f"c) 6\n" \
-                 f"d) 8\n" \
-                 f"Answer: b" \
-                 f"Explanation: Dogs have four legs, just like most mammals."
-        response = self._call_openai_api(prompt, max_tokens=150)
-        example_question_answer = response.get('choices', [{}])[0].get('message', {}).get('content', '').strip()
-        if 'Answer:' in example_question_answer:
-            example_question, example_answer = example_question_answer.split('Answer:', 1)
-            return example_question.strip(), example_answer.strip()
-        else:
-            return example_question_answer, "No answer provided"
-
     def create_personalized_question(self, long_paragraph):
         hobby = random.choice(self.user_profile.get("hobbies", ["unknown hobby"]))
         learning_preferences = ', '.join(self.user_profile.get("learning_preferences", ["unknown learning preferences"]))
@@ -234,11 +109,11 @@ class LessonGenerator:
                  f"Here is the paragraph to base the question on:\n\n{long_paragraph}. " \
                  f"Here is an example of how it should look exactly:\n " \
                  f"Question: How many legs does a dog have?\n" \
-                 f"a) 3\n" \
-                 f"b) 4\n" \
-                 f"c) 6\n" \
-                 f"d) 8\n" \
-                 f"Answer: b" \
+                 f"1. 3\n" \
+                 f"2. 4\n" \
+                 f"3. 6\n" \
+                 f"4. 8\n" \
+                 f"Answer: 2" \
                  f"Explanation: Dogs have four legs, just like most mammals."
         response = self._call_openai_api(prompt, max_tokens=150)
         content = response.get('choices', [{}])[0].get('message', {}).get('content', '').strip()
@@ -248,24 +123,6 @@ class LessonGenerator:
             return question.strip(), correct_answer.strip(), explanation.strip()
         else:
             return content, "No correct answer provided", "No explanation provided"
-
-    def ask_student_question(self):
-        print("Please ask your question:")
-        student_question = str(self.listen_to_student()).strip()
-
-        if not student_question:
-            return "Sorry, I couldn't hear your question clearly."
-
-        response = self._call_openai_api(student_question, max_tokens=150)
-        answer = response.get('choices', [{}])[0].get('message', {}).get('content', '').strip()
-
-        if answer:
-            self.speak_text("Here is the answer to your question:")
-            self.speak_text(answer)
-            return answer
-        else:
-            return "Sorry, I couldn't find an answer to your question."
-
 
     def _call_openai_api(self, prompt, max_tokens):
         try:
@@ -285,36 +142,6 @@ class LessonGenerator:
         except requests.exceptions.RequestException as e:
             print(f"Error calling OpenAI API: {e}")
             return {}
-
-    def speak_text(self, text):
-        print(text)
-        self.tts_engine.say(text)
-        self.tts_engine.runAndWait()
-
-    def listen_to_student(self, audio_file=None):
-        while True:
-            try:
-                if audio_file:
-                    with sr.AudioFile(audio_file) as source:
-                        audio = self.recognizer.record(source)
-                else:
-                    with self.microphone as source:
-                        print("Listening... Please speak now.")
-                        self.recognizer.adjust_for_ambient_noise(source, duration=2)
-                        audio = self.recognizer.listen(source, timeout=10, phrase_time_limit=15)
-                print("Processing audio...")
-                response = self.recognizer.recognize_google(audio)
-                print(f"Recognized speech: {response}")
-                return response
-            except sr.UnknownValueError:
-                print("Google Speech Recognition could not understand the audio. Please try again.")
-                self.speak_text("I couldn't understand that. Could you please repeat?")
-            except sr.RequestError as e:
-                print(f"Could not request results from Google Speech Recognition service; {e}")
-                return f"Could not request results from Google Speech Recognition service; {e}"
-            except Exception as e:
-                print(f"An unexpected error occurred: {e}")
-                return "An error occurred while trying to recognize your speech."
 
 
 

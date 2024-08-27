@@ -19,7 +19,7 @@ const ReturnButton = () => {
                 fontSize: '1rem',
             }}
         >
-            Return to Landing Page
+            Return to Home
         </button>
     );
 };
