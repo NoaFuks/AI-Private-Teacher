@@ -9,11 +9,6 @@ const ProfilePage = () => {
     const [age, setAge] = useState('');
     const [hobbies, setHobbies] = useState('');
     const [learningPreferences, setLearningPreferences] = useState('');
-    const [pdfFile, setPdfFile] = useState(null);
-
-    const handlePdfUpload = (e) => {
-        setPdfFile(e.target.files[0]);
-    };
 
 
     const handleSubmit = async (e) => {
@@ -29,27 +24,10 @@ const ProfilePage = () => {
         try {
             // Send the profile to the backend
             await axios.post('http://localhost:8000/api/save-profile', studentProfile);
-    
-            if (pdfFile) {
-                // Upload the PDF file along with the student's name
-                const formData = new FormData();
-                formData.append('file', pdfFile);
-                formData.append('student_name', name);  // Add student name to the form data
-    
-                const response = await axios.post('http://localhost:8000/api/upload-pdf', formData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                    },
-                });
-    
-                alert("Profile and PDF saved successfully");
-                console.log('Profile and PDF saved:', response.data);
-            } else {
-                alert("Profile saved successfully");
-                console.log('Profile saved without PDF');
-            }
+            alert("Profile saved successfully");
+            console.log('Profile saved:', studentProfile);
         } catch (error) {
-            console.error('There was an error saving the profile and/or PDF!', error);
+            console.error('There was an error saving the profile!', error);
         }
     };
     
@@ -101,16 +79,6 @@ const ProfilePage = () => {
                             value={learningPreferences}
                             onChange={(e) => setLearningPreferences(e.target.value)}
                             placeholder="e.g. math, english, history"
-                        />
-                    </div>
-                    <div className="form-group mb-4">
-                        <label htmlFor="pdfFile">Upload PDF for Lesson:</label>
-                        <input
-                            type="file"
-                            id="pdfFile"
-                            className="form-control"
-                            onChange={handlePdfUpload}
-                            accept="application/pdf"
                         />
                     </div>
                     <div className="d-grid gap-2">

@@ -32,11 +32,6 @@ const ParentProgressPage = () => {
         }
     };
 
-    const extractLessonNumber = (lessonName) => {
-        const match = lessonName.match(/\d+/);  // Use regex to find numbers in the string
-        return match ? match[0] : lessonName;  // Return the number if found, else return the original string
-    };
-
     return (
         <div className="progress-page">
             <div className="progress-card">
@@ -58,11 +53,9 @@ const ParentProgressPage = () => {
                 {progressData ? (
                     <div className="progress-content">
                         <h2>Student Progress</h2>
-                        {/* <p><strong>Total Lessons:</strong> {progressData['Total Lessons']}</p> */}
-                        <p><strong>Total Lessons:</strong> {extractLessonNumber(progressData['Total Lessons'])}</p>
+                        <p><strong>Correct Percentage:</strong> {progressData['Correct Percentage']}</p>
+                        <p><strong>Incorrect Percentage:</strong> {progressData['Incorrect Percentage']}</p>
                         <p><strong>Total Questions:</strong> {progressData['Total Questions']}</p>
-                        <p><strong>Correct Answers:</strong> {progressData['Correct Answers']}</p>
-                        <p><strong>Incorrect Answers:</strong> {progressData['Incorrect Answers']}</p>
                         <p className="topics-title"><strong>Topics Covered:</strong></p>
                         <ol>
                             {Array.isArray(progressData['Topics Covered']) ? progressData['Topics Covered']

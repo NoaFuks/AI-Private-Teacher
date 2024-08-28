@@ -31,7 +31,6 @@ os.makedirs(PROGRESS_DIR, exist_ok=True)
 os.makedirs(PDF_DIR, exist_ok=True)
 
 
-
 @app.post("/api/upload-pdf")
 async def upload_pdf(file: UploadFile = File(...), student_name: str = Form(...)):
     try:
@@ -47,6 +46,7 @@ async def upload_pdf(file: UploadFile = File(...), student_name: str = Form(...)
         return {"message": "PDF uploaded successfully", "file_path": file_path}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to upload PDF: {e}")
+
 
 
 @app.post("/api/save-profile")
@@ -69,7 +69,13 @@ async def generate_lesson(name: str = Form(...), file: UploadFile = File(None)):
         student_dir = os.path.join(PDF_DIR, student_name)
         os.makedirs(student_dir, exist_ok=True)
 
-        # If a PDF is uploaded, save it in the student's directory
+        # Delete all existing PDFs in the student's directory
+        for existing_file in os.listdir(student_dir):
+            file_path = os.path.join(student_dir, existing_file)
+            if os.path.isfile(file_path) and existing_file.endswith('.pdf'):
+                os.remove(file_path)
+
+        # If a new PDF is uploaded, save it in the student's directory
         if file:
             file_path = os.path.join(student_dir, file.filename)
             with open(file_path, "wb") as buffer:
@@ -214,5 +220,6 @@ async def save_progress(request: Request):
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("app.main:app", host="127.0.0.1", port=8000, reload=True)
+
 
 

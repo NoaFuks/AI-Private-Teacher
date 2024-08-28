@@ -26,38 +26,30 @@ class LessonGenerator:
             return ""
 
     def generate_lesson_in_segments(self, pdf_path):
-            text = self.extract_text_from_pdf(pdf_path)
-            if not text:
-                return {"lesson": "No text extracted from the PDF.", "questions": [], "ask_for_questions": False}
+        text = self.extract_text_from_pdf(pdf_path)
+        if not text:
+            return {"lesson": "No text extracted from the PDF.", "questions": [], "ask_for_questions": False}
 
-#             # Extract a dynamic lesson topic from the content
-#             lesson_topic = self.extract_topic_from_content(text)
-#
-#             # Generate the lesson summary and detailed content
-#             lesson_summary = f"Today's topic: {lesson_topic}."
-#             lesson_content = lesson_summary + "\n\n"
+        segments = self.split_text_into_segments(text)
+        lesson_segments = []
+        all_questions = []
+        ask_feelings_interval = 2  # You can adjust this to any interval you prefer
 
-            # Split the text into segments and generate corresponding questions for each segment
-            segments = self.split_text_into_segments(text)
-            lesson_segments = []
-            all_questions = []
+        for i, segment in enumerate(segments):
+            long_paragraph = self.create_long_paragraph(segment)
+            lesson_segments.append(long_paragraph)
 
-            for segment in segments:
-                # Add segment to the list
-                long_paragraph = self.create_long_paragraph(segment)
-                lesson_segments.append(long_paragraph)
+            # Generate corresponding questions
+            personalized_question, correct_answer, explanation = self.create_personalized_question(long_paragraph)
 
-                # Generate corresponding questions
-                personalized_question, correct_answer, explanation = self.create_personalized_question(long_paragraph)
+            all_questions.append({
+                "question": personalized_question,
+                "correct_answer": correct_answer,
+                "explanation": explanation
+            })
 
-                all_questions.append({
-                    "question": personalized_question,
-                    "correct_answer": correct_answer,
-                    "explanation": explanation
-                })
+        return {"lesson_segments": lesson_segments, "questions": all_questions}
 
-            # Return all lesson segments and questions
-            return {"lesson_segments": lesson_segments, "questions": all_questions}
 
     def handle_student_question(self, student_question):
         prompt = f"Answer this student's question: {student_question}"
@@ -148,7 +140,7 @@ class LessonGenerator:
 # Example usage:
 if __name__ == "__main__":
     from UserProfile import UserProfileManager
-    from progressPage import ProgressTracker  # Make sure to import from the correct module
+    from progress_page import ProgressTracker  # Make sure to import from the correct module
 
     manager = UserProfileManager()
     manager.load_profiles_from_file('user_profiles.json')

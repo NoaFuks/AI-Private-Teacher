@@ -21,12 +21,55 @@ const LessonGenerationPage = () => {
     const [pdfFile, setPdfFile] = useState(null); // New state for the uploaded PDF
     const [isListening, setIsListening] = useState(false); // Manage speech recognition state
 
+    // const [studentFeeling, setStudentFeeling] = useState(''); // To store the student's feelings input
+    const [showFeelingsModal, setShowFeelingsModal] = useState(false); // Control modal visibility
+    const [selectedFeeling, setSelectedFeeling] = useState(''); // Track the selected feeling
+
+
+
+    
+
+    // useEffect(() => {
+    //     if (lessonSegments.length > 0 && currentSegmentIndex < lessonSegments.length) {
+    //         speakText(lessonSegments[currentSegmentIndex]);
+    //         setAskForQuestions(true);
+    //     }
+    // }, [lessonSegments, currentSegmentIndex]);
+
     useEffect(() => {
         if (lessonSegments.length > 0 && currentSegmentIndex < lessonSegments.length) {
-            speakText(lessonSegments[currentSegmentIndex]);
-            setAskForQuestions(true);
+            if ((currentSegmentIndex + 1) % 2 === 0) { // Adjust the interval as needed
+                setShowFeelingsModal(true);
+            } else {
+                speakText(lessonSegments[currentSegmentIndex]);
+                setAskForQuestions(true);
+            }
         }
     }, [lessonSegments, currentSegmentIndex]);
+    
+
+
+    const handleFeelingsSubmit = async (feeling) => {
+        try {
+            // Save the selected feeling as part of the progress
+            await axios.post('http://localhost:8000/api/save-progress', {
+                student_name: studentName,
+                segment_index: currentSegmentIndex,
+                segment_content: lessonSegments[currentSegmentIndex],
+                student_feeling: feeling // Save the selected feeling
+            });
+    
+            setShowFeelingsModal(false); // Close the modal
+            setAskForQuestions(true); // Proceed with questions
+            speakText(lessonSegments[currentSegmentIndex]); // Start the current segment
+    
+        } catch (error) {
+            console.error('Error saving student feeling:', error);
+        }
+    };
+    
+    
+    
 
     const handleGenerateLesson = async (e) => {
         e.preventDefault();
@@ -74,12 +117,33 @@ const LessonGenerationPage = () => {
             const feedbackResponse = response.data.feedback;
             setFeedback(feedbackResponse);
             speakText(feedbackResponse);
-
+    
+            // Save the summary of the segment when the student submits the answer
+            const segmentSummary = `Summary of segment ${currentSegmentIndex + 1}: ${lessonSegments[currentSegmentIndex]}`;
+            await saveSegmentProgress(segmentSummary);
+    
             setShowNextSegmentButton(true);
         } catch (error) {
             console.error('Error validating answer:', error);
         }
     };
+
+    const saveSegmentProgress = async (summary) => {
+    try {
+        await axios.post('http://localhost:8000/api/save-progress', {
+            student_name: studentName,
+            segment_index: currentSegmentIndex,
+            segment_content: lessonSegments[currentSegmentIndex],
+            summary: summary,
+            student_question: studentQuestion,
+            answer_to_question: answerToQuestion,
+            asked_question: studentQuestion !== ''
+        });
+        } catch (error) {
+            console.error('Error saving segment progress:', error);
+        }
+    };
+
 
     const handleQuestionSubmit = async (e) => {
         e.preventDefault();
@@ -127,27 +191,15 @@ const LessonGenerationPage = () => {
         }
     };
 
-    const handleNextSegment = async () => {
+    const handleNextSegment = () => {
         window.speechSynthesis.cancel();
         setShowNextSegmentButton(false);
         setFeedback('');
         setStudentAnswer('');
         setStudentQuestion('');
         setAnswerToQuestion('');
-
+    
         if (currentSegmentIndex < lessonSegments.length - 1) {
-            const segmentSummary = `Summary of segment ${currentSegmentIndex + 1}: ${lessonSegments[currentSegmentIndex]}`;
-
-            await axios.post('http://localhost:8000/api/save-progress', {
-                student_name: studentName,
-                segment_index: currentSegmentIndex,
-                segment_content: lessonSegments[currentSegmentIndex],
-                summary: segmentSummary,
-                student_question: studentQuestion,
-                answer_to_question: answerToQuestion,
-                asked_question: studentQuestion !== ''
-            });
-
             setCurrentSegmentIndex(currentSegmentIndex + 1);
             setCurrentQuestionIndex(0);
             setAskForQuestions(true);
@@ -155,6 +207,7 @@ const LessonGenerationPage = () => {
             setFeedback('Lesson completed!');
         }
     };
+    
 
     // Function to handle voice input using the Web Speech API
     const handleVoiceInput = () => {
@@ -210,6 +263,34 @@ const LessonGenerationPage = () => {
 
     return (
         <div className="lesson-page">
+            {showFeelingsModal && (
+                <div className="modal show d-block" tabIndex="-1">
+                    <div className="modal-dialog">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title">How do you feel about the lesson so far?</h5>
+                            </div>
+                            <div className="modal-body text-center">
+                                <div className="d-flex justify-content-around">
+                                    <div onClick={() => handleFeelingsSubmit('happy')} style={{ cursor: 'pointer' }}>
+                                        <span role="img" aria-label="Happy">😊</span> <br /> Happy
+                                    </div>
+                                    <div onClick={() => handleFeelingsSubmit('neutral')} style={{ cursor: 'pointer' }}>
+                                        <span role="img" aria-label="Neutral">😐</span> <br /> Neutral
+                                    </div>
+                                    <div onClick={() => handleFeelingsSubmit('confused')} style={{ cursor: 'pointer' }}>
+                                        <span role="img" aria-label="Confused">😕</span> <br /> Confused
+                                    </div>
+                                    <div onClick={() => handleFeelingsSubmit('sad')} style={{ cursor: 'pointer' }}>
+                                        <span role="img" aria-label="Sad">😞</span> <br /> Sad
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             <div className="lesson-card">
                 <Icon size={80} />
                 <h1 className="text-center mb-4">Lesson Generation</h1>

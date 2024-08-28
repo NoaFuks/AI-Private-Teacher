@@ -51,15 +51,14 @@ class ParentProgressPage:
         correct_answers = 0
         incorrect_answers = 0
         total_questions = 0
-        topics_covered = []
-        last_lesson_name = ""
+        topics_covered_set = set()  # Using a set to store unique topics
 
-        # Iterate through the lessons to accumulate data and find the last lesson name
+        # Iterate through all the lessons to accumulate data
         for lesson_data in progress_data:
             segments = lesson_data.get('segments', [])
-            if segments:
-                last_lesson_name = segments[-1].get('lesson_name', last_lesson_name)  # Update last lesson name
+            print(f"Processing {len(segments)} segments in this lesson.")  # Debugging output
             for segment in segments:
+                # Check and update question correctness data
                 if segment.get('correct') is not None:
                     total_questions += 1
                     if segment['correct']:
@@ -67,20 +66,31 @@ class ParentProgressPage:
                     else:
                         incorrect_answers += 1
 
-                # Extract the summary of each segment and summarize it
-                segment_summary = segment.get('lesson_summary', 'No summary available')
-                if "lesson" not in segment_summary.lower():  # Exclude summaries containing "lesson"
+                # Extract and summarize the segment summary
+                segment_summary = segment.get('lesson_summary', '').strip()
+                print(f"Processing segment summary: '{segment_summary}'")  # Debugging output
+
+                # Filter out non-informative summaries
+                if segment_summary and "lesson segment" not in segment_summary.lower() and "completed" not in segment_summary.lower():
                     summarized_topic = self.summarize_topic(segment_summary)
-                    topics_covered.append(summarized_topic)
+                    topics_covered_set.add(summarized_topic)  # Add to set to ensure uniqueness
+
+        # Convert set back to a list for ordered display
+        topics_covered = list(topics_covered_set)
+
+        print(f"Total segments processed: {len(topics_covered)}")  # Debugging output
+
+        # Calculate percentages
+        correct_percentage = (correct_answers / total_questions * 100) if total_questions > 0 else 0
+        incorrect_percentage = 100 - correct_percentage
 
         # Generate AI opinion on performance
         ai_opinion = self.generate_ai_opinion(correct_answers, total_questions)
 
         summary = {
-            "Total Lessons": last_lesson_name,  # Use the last lesson name
+            "Correct Percentage": f"{correct_percentage:.2f}%",
+            "Incorrect Percentage": f"{incorrect_percentage:.2f}%",
             "Total Questions": total_questions,
-            "Correct Answers": correct_answers,
-            "Incorrect Answers": incorrect_answers,
             "Topics Covered": topics_covered,  # Return the summarized topics
             "AI Opinion": ai_opinion
         }
@@ -94,7 +104,7 @@ class ParentProgressPage:
             return summary  # Already 3 words or less
         else:
             # Send a request to the AI to summarize it in 2-3 words
-            prompt = f"Summarize the following topic in 2-3 words: {summary}"
+            prompt = f"Summarize the following topic in 3-4 words: {summary} write what the subject of the summery (math, english and etc.) and then write what exactly form this subject"
             summarized_topic = self.request_ai_summary(prompt)
             return summarized_topic
 
@@ -117,3 +127,5 @@ class ParentProgressPage:
             return result['choices'][0]['message']['content'].strip()
         else:
             return "Summary unavailable"  # Fallback if the request fails
+
+
