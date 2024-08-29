@@ -1,0 +1,22 @@
+{
+    "segments": [
+        {
+            "lesson_summary": "Summary of segment 1: In this lesson plan created by Akihiko Takahashi for a workshop at Brewer Island School in San Mateo, CA, students will be exploring the concept of finding the area of shapes. The goal of this unit is to help students develop a deeper understanding of area through engaging problem-solving activities. By the end of this lesson, students will not only be able to calculate the area of different shapes but also understand the real-world applications of this mathematical concept. Get ready to dive into the world of shapes and measurements in a fun and interactive way!",
+            "correct": null,
+            "attempts": 1,
+            "explanations": [],
+            "details": [
+                {
+                    "interaction_details": [],
+                    "choice_question": null,
+                    "student_question": null,
+                    "answer_to_question": null,
+                    "asked_question": false
+                }
+            ],
+            "student_feeling": null,
+            "part_number": 2,
+            "lesson_name": "Segment 1"
+        }
+    ]
+}

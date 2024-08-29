@@ -1,0 +1,22 @@
+{
+    "segments": [
+        {
+            "lesson_summary": "Summary of segment 1: Welcome to the 4th Grade Mathematics Lesson Plan at Brewer Island School in San Mateo, CA! This lesson, taught by instructor Akihiko Takahashi, will focus on finding the area of shapes. The goal of this unit is to deepen students' understanding of the concept of area through engaging problem-solving activities. Throughout the workshop, students will learn how to calculate the area of various shapes using mathematical formulas and real-world examples. By the end of these lessons, students will have a strong grasp of how to find the area of shapes and apply this knowledge to solve complex math problems.",
+            "correct": null,
+            "attempts": 1,
+            "explanations": [],
+            "details": [
+                {
+                    "interaction_details": [],
+                    "choice_question": null,
+                    "student_question": null,
+                    "answer_to_question": null,
+                    "asked_question": false
+                }
+            ],
+            "student_feeling": null,
+            "part_number": 2,
+            "lesson_name": "Segment 1"
+        }
+    ]
+}

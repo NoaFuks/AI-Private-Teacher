@@ -192,10 +192,11 @@ async def save_progress(request: Request):
         student_question = progress_data.get("student_question", "")
         answer_to_question = progress_data.get("answer_to_question", "")
         asked_question = progress_data.get("asked_question", False)
+        student_feeling = progress_data.get("student_feeling", None)  # Extract student_feeling here
 
         interaction_details = {
             "segmentContent": segment_content,
-            "question": None,  # Placeholder for choice question, if applicable
+            "question": None,
             "student_question": student_question if asked_question else None,
             "answer_to_question": answer_to_question if asked_question else None,
             "asked_question": asked_question
@@ -205,15 +206,17 @@ async def save_progress(request: Request):
         progress_tracker = ProgressTracker(student_name=student_name, progress_directory=PROGRESS_DIR)
         progress_tracker.update_progress(
             lesson=f"Segment {segment_index + 1}",
-            correct=None,  # Not applicable here
+            correct=None,
             explanation="",
             interaction_details=interaction_details,
-            lesson_summary=summary
+            lesson_summary=summary,
+            student_feeling=student_feeling  # Pass it to the ProgressTracker here
         )
 
         return {"message": "Progress saved successfully"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to save progress: {e}")
+
 
 
 

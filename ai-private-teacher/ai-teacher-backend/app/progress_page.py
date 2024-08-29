@@ -63,40 +63,16 @@ class ProgressTracker:
         self.current_part_number += 1
 
 
-    # def update_progress(self, lesson, correct, explanation="", interaction_details=None, lesson_summary=""):
-    #     lesson_data = {
-    #         'lesson_summary': lesson_summary,  # Include the summary here
-    #         'correct': correct,  # This will be True or False based on the validation
-    #         'attempts': 1,
-    #         'explanations': [explanation] if explanation else [],
-    #         'details': [{
-    #             "interaction_details": interaction_details.get('interaction_details', []),
-    #             "choice_question": interaction_details.get('question'),  # Save the AI's choice question
-    #             "student_question": None,
-    #             "answer_to_question": None,
-    #             "asked_question": False
-    #         }] if interaction_details else []
-    #     }
-    #
-    #     # Include logic to track if a student question was asked
-    #     if interaction_details and interaction_details.get('student_question'):
-    #         lesson_data['details'][0]['asked_question'] = True
-    #         lesson_data['details'][0]['student_question'] = interaction_details['student_question']
-    #         lesson_data['details'][0]['answer_to_question'] = interaction_details['answer_to_question']
-    #
-    #     # Save the updated progress data
-    #     self.save_progress_page(lesson, lesson_data)
-
     def update_progress(self, lesson, correct, explanation="", interaction_details=None, lesson_summary="",
                         student_feeling=None):
         lesson_data = {
-            'lesson_summary': lesson_summary,  # Include the summary here
-            'correct': correct,  # This will be True or False based on the validation
+            'lesson_summary': lesson_summary,
+            'correct': correct,
             'attempts': 1,
             'explanations': [explanation] if explanation else [],
             'details': [{
                 "interaction_details": interaction_details.get('interaction_details', []),
-                "choice_question": interaction_details.get('question'),  # Save the AI's choice question
+                "choice_question": interaction_details.get('question'),
                 "student_question": None,
                 "answer_to_question": None,
                 "asked_question": False
@@ -104,13 +80,24 @@ class ProgressTracker:
             'student_feeling': student_feeling  # Save the student's feeling
         }
 
-        # Include logic to track if a student question was asked
         if interaction_details and interaction_details.get('student_question'):
             lesson_data['details'][0]['asked_question'] = True
             lesson_data['details'][0]['student_question'] = interaction_details['student_question']
             lesson_data['details'][0]['answer_to_question'] = interaction_details['answer_to_question']
 
+        # Debug: Print the lesson data before saving
+        print(f"Saving the following data: {lesson_data}")
+
         # Save the updated progress data
         self.save_progress_page(lesson, lesson_data)
+
+
+
+
+
+
+
+
+
 
 

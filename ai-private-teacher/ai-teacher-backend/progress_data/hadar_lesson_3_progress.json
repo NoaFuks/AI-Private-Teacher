@@ -1,0 +1,24 @@
+{
+    "segments": [
+        {
+            "lesson_summary": "Lesson segment 1 completed.",
+            "correct": false,
+            "attempts": 1,
+            "explanations": [
+                "The paragraph clearly states that the lesson will focus on finding the area of shapes, not the perimeter, volume, or solving algebraic equations."
+            ],
+            "details": [
+                {
+                    "interaction_details": [],
+                    "choice_question": "Question: What is the focus of the 4th Grade Mathematics Lesson Plan at Brewer Island School?\na) Finding the perimeter of shapes\nb) Calculating volume of shapes\nc) Finding the area of shapes\nd) Solving algebraic equations",
+                    "student_question": null,
+                    "answer_to_question": null,
+                    "asked_question": false
+                }
+            ],
+            "student_feeling": null,
+            "part_number": 2,
+            "lesson_name": "Segment 1"
+        }
+    ]
+}

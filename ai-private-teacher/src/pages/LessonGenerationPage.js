@@ -21,42 +21,66 @@ const LessonGenerationPage = () => {
     const [pdfFile, setPdfFile] = useState(null); // New state for the uploaded PDF
     const [isListening, setIsListening] = useState(false); // Manage speech recognition state
 
-    // const [studentFeeling, setStudentFeeling] = useState(''); // To store the student's feelings input
     const [showFeelingsModal, setShowFeelingsModal] = useState(false); // Control modal visibility
     const [selectedFeeling, setSelectedFeeling] = useState(''); // Track the selected feeling
 
-
-
-    
+    const [lessonStopped, setLessonStopped] = useState(false);
 
     // useEffect(() => {
     //     if (lessonSegments.length > 0 && currentSegmentIndex < lessonSegments.length) {
-    //         speakText(lessonSegments[currentSegmentIndex]);
-    //         setAskForQuestions(true);
+    //         if ((currentSegmentIndex + 1) % 2 === 0) { // Adjust the interval as needed
+    //             setShowFeelingsModal(true);
+    //         } else {
+    //             speakText(lessonSegments[currentSegmentIndex]);
+    //             setAskForQuestions(true);
+    //         }
     //     }
     // }, [lessonSegments, currentSegmentIndex]);
-
+    
     useEffect(() => {
-        if (lessonSegments.length > 0 && currentSegmentIndex < lessonSegments.length) {
-            if ((currentSegmentIndex + 1) % 2 === 0) { // Adjust the interval as needed
+        if (lessonSegments.length > 0 && currentSegmentIndex < lessonSegments.length && !lessonStopped) {
+            if ((currentSegmentIndex + 1) % 2 === 0) {
                 setShowFeelingsModal(true);
             } else {
                 speakText(lessonSegments[currentSegmentIndex]);
                 setAskForQuestions(true);
             }
         }
-    }, [lessonSegments, currentSegmentIndex]);
-    
+    }, [lessonSegments, currentSegmentIndex, lessonStopped]);
+
+    const handleStopLesson = async () => {
+        setLessonStopped(true);
+        window.speechSynthesis.cancel();
+        
+        try {
+            await axios.post('http://localhost:8000/api/save-progress', {
+                student_name: studentName,
+                segment_index: currentSegmentIndex,
+                segment_content: lessonSegments[currentSegmentIndex],
+                summary: `Lesson stopped at segment ${currentSegmentIndex + 1}`,
+                student_question: studentQuestion,
+                answer_to_question: answerToQuestion,
+                asked_question: studentQuestion !== ''
+            });
+            setLessonSegments([]);
+            setQuestions([]);
+            setFeedback('Lesson has been stopped.');
+        } catch (error) {
+            console.error('Error stopping lesson:', error);
+        }
+    };
 
 
     const handleFeelingsSubmit = async (feeling) => {
+        console.log('Selected feeling:', feeling); // Debugging
+    
         try {
             // Save the selected feeling as part of the progress
             await axios.post('http://localhost:8000/api/save-progress', {
                 student_name: studentName,
                 segment_index: currentSegmentIndex,
                 segment_content: lessonSegments[currentSegmentIndex],
-                student_feeling: feeling // Save the selected feeling
+                student_feeling: feeling // Ensure this is correctly captured
             });
     
             setShowFeelingsModal(false); // Close the modal
@@ -67,6 +91,7 @@ const LessonGenerationPage = () => {
             console.error('Error saving student feeling:', error);
         }
     };
+    
     
     
     
@@ -326,6 +351,7 @@ const LessonGenerationPage = () => {
                         </div>
                     </form>
                 )}
+                
 
                 {lessonSegments.length > 0 && (
                     <>
@@ -333,6 +359,11 @@ const LessonGenerationPage = () => {
                             <h2>Lesson Segment:</h2>
                             <pre>{lessonSegments[currentSegmentIndex]}</pre>
                         </div>
+
+                        {/* Stop Lesson Button */}
+                        <button type="button" className="btn btn-danger mt-4" onClick={handleStopLesson}>
+                            Stop Lesson
+                        </button>
                         {askForQuestions ? (
                             <div className="question-section mt-4">
                                 <h3>Do you have any questions?</h3>
