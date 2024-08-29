@@ -42,7 +42,6 @@ class ParentProgressPage:
         else:
             return "Needs improvement. The child struggled with the material and would benefit from extra practice or review."
 
-
     def summarize_child_progress(self, student_name):
         progress_data = self.get_child_progress(student_name)
         if not progress_data:
@@ -52,6 +51,7 @@ class ParentProgressPage:
         incorrect_answers = 0
         total_questions = 0
         topics_covered_set = set()  # Using a set to store unique topics
+        feelings = []  # To collect feelings
 
         # Iterate through all the lessons to accumulate data
         for lesson_data in progress_data:
@@ -75,6 +75,11 @@ class ParentProgressPage:
                     summarized_topic = self.summarize_topic(segment_summary)
                     topics_covered_set.add(summarized_topic)  # Add to set to ensure uniqueness
 
+                # Collect the student's feelings
+                student_feeling = segment.get('student_feeling')
+                if student_feeling:
+                    feelings.append(student_feeling)
+
         # Convert set back to a list for ordered display
         topics_covered = list(topics_covered_set)
 
@@ -92,7 +97,8 @@ class ParentProgressPage:
             "Incorrect Percentage": f"{incorrect_percentage:.2f}%",
             "Total Questions": total_questions,
             "Topics Covered": topics_covered,  # Return the summarized topics
-            "AI Opinion": ai_opinion
+            "AI Opinion": ai_opinion,
+            "Feelings": feelings  # Include the feelings in the summary
         }
 
         return summary

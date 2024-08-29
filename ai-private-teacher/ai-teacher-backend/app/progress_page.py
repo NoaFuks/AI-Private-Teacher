@@ -65,6 +65,11 @@ class ProgressTracker:
 
     def update_progress(self, lesson, correct, explanation="", interaction_details=None, lesson_summary="",
                         student_feeling=None):
+
+        if "stopped" in lesson_summary.lower():
+            print(f"Skipped saving the following summary: {lesson_summary}")
+            return  # Skip saving this segment
+
         lesson_data = {
             'lesson_summary': lesson_summary,
             'correct': correct,
@@ -90,14 +95,5 @@ class ProgressTracker:
 
         # Save the updated progress data
         self.save_progress_page(lesson, lesson_data)
-
-
-
-
-
-
-
-
-
 
 
