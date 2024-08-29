@@ -1,0 +1,22 @@
+{
+    "segments": [
+        {
+            "lesson_summary": "Summary of segment 3: In math, measurements and geometry are important concepts to understand. Measurements involve length, weight, volume, and time. For length measurements, we use units like grams, kilograms, and tons. When it comes to volume, we compare and measure the volume of different shapes and objects. Additionally, we measure time using units such as days, hours, minutes, and seconds. Geometry deals with angles, parallel lines, triangles, and squares. Understanding these concepts is crucial in solving math problems and analyzing data effectively.",
+            "correct": null,
+            "attempts": 1,
+            "explanations": [],
+            "details": [
+                {
+                    "interaction_details": [],
+                    "choice_question": null,
+                    "student_question": null,
+                    "answer_to_question": null,
+                    "asked_question": false
+                }
+            ],
+            "student_feeling": null,
+            "part_number": 2,
+            "lesson_name": "Segment 3"
+        }
+    ]
+}

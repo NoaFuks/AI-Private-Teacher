@@ -1,0 +1,24 @@
+{
+    "segments": [
+        {
+            "lesson_summary": "Lesson segment 1 completed.",
+            "correct": false,
+            "attempts": 1,
+            "explanations": [
+                "In the decimal system, the digits range from 0 to 9, giving a total of 10 possible digits. Each digit's place value increases by a factor of 10 as you move to the left."
+            ],
+            "details": [
+                {
+                    "interaction_details": [],
+                    "choice_question": "Question: In the decimal system, what are the place values for each digit?\nA. 0-8\nB. 1-10\nC. 0-9\nD. 2-11",
+                    "student_question": null,
+                    "answer_to_question": null,
+                    "asked_question": false
+                }
+            ],
+            "student_feeling": null,
+            "part_number": 2,
+            "lesson_name": "Segment 1"
+        }
+    ]
+}

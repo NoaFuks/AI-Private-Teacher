@@ -22,7 +22,7 @@ const LandingPage = () => {
                     </Link>
 
                     <Link to="/progress">
-                        <button className="styled-button">Parent Progress Page</button>
+                        <button className="styled-button">Progress Page</button>
                     </Link>
                 </div>
             </div>

@@ -1,0 +1,22 @@
+{
+    "segments": [
+        {
+            "lesson_summary": "Summary of segment 3: When a number is multiplied by 100, two zeros are added to the right of the original number, and the opposite happens when the number is divided. The values of the letters from Alef to Tav are equivalent to 1 to 400. For example, if a person has 8 ribs and 6 hips, how many ribs and hips does the person have? How many days are counted from the beginning of the counting of the Omer until Lag BaOmer? It is said in Pirkei Avot, \"Ben Yachai to Chupah.\" At what age do people get married according to this saying? The placement of numbers in the field of multiplication on straight lines is important. For example, place 9,000 on a straight line of numbers.",
+            "correct": null,
+            "attempts": 1,
+            "explanations": [],
+            "details": [
+                {
+                    "interaction_details": [],
+                    "choice_question": null,
+                    "student_question": null,
+                    "answer_to_question": null,
+                    "asked_question": false
+                }
+            ],
+            "student_feeling": null,
+            "part_number": 2,
+            "lesson_name": "Segment 3"
+        }
+    ]
+}

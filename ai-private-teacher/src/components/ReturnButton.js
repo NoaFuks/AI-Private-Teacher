@@ -16,7 +16,7 @@ const ReturnButton = () => {
                 border: 'none',
                 borderRadius: '5px',
                 cursor: 'pointer',
-                fontSize: '1rem',
+                fontSize: '1.2rem',
             }}
         >
             Return to Home

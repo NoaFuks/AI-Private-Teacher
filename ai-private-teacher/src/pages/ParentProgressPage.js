@@ -45,43 +45,47 @@ const ParentProgressPage = () => {
     const renderFeelingIcon = (feeling) => {
         switch(feeling) {
             case 'happy':
-                return <span role="img" aria-label="Happy">😊</span>;
+                return <span role="img" aria-label="Going great">😊</span>;
             case 'neutral':
-                return <span role="img" aria-label="Neutral">😐</span>;
+                return <span role="img" aria-label="All good">😐</span>;
             case 'confused':
-                return <span role="img" aria-label="Confused">😕</span>;
+                return <span role="img" aria-label="I'm confused">😕</span>;
             case 'sad':
-                return <span role="img" aria-label="Sad">😞</span>;
+                return <span role="img" aria-label="It's really hard">😞</span>;
             default:
                 return null;
         }
     };
 
-    
-
     return (
         <div className="progress-page">
             <div className="progress-card">
                 <Icon size={80} />
-                <h1 className="text-center mb-4">Parent Progress Page</h1>
+                <h1 className="text-center mb-4">Progress Page</h1>
                 <form onSubmit={handleSubmit}>
-                    <label htmlFor="childName">Enter Child's Name:</label>
-                    <input
-                        type="text"
-                        id="childName"
-                        value={childName}
-                        onChange={handleInputChange}
-                        placeholder="Child's Name"
-                        required
-                    />
-                    <button type="submit">Submit</button>
+                    <div className="form-group mb-3">
+                        <label htmlFor="childName">Student's Name:</label>
+                        <input
+                            type="text"
+                            id="childName"
+                            className="form-control"
+                            value={childName}
+                            onChange={handleInputChange}
+                            placeholder="Enter Student's Name"
+                            required
+                        />
+                    </div>
+                    <div className="gap-2">
+                        <button type="submit" className="btn btn-primary btn-lg">Submit</button>
+                    </div>
                 </form>
                 {error && <p className="error-message">{error}</p>}
                 {progressData ? (
                     <div className="progress-content">
-                        <h2>Student Progress</h2>
+                        <h2 className="text-center mb-4">Student Progress</h2>
                         <p><strong>Total Questions:</strong> {progressData['Total Questions']}</p>
                        <div className="progress-bar-container">
+                           <label htmlFor="childName">Correct questions:</label>
                             <div className={`progress-bar`}>
                                 <div
                                     className={`progress-bar-filled ${getBarClass(progressData['Correct Percentage'])}`}
@@ -91,7 +95,8 @@ const ParentProgressPage = () => {
                                     {parseFloat(progressData['Correct Percentage']).toFixed(2)}%
                                 </span>
                             </div>
-                            <div className={`progress-bar`}>
+                           <label htmlFor="childName">Incorrect questions:</label>
+                           <div className={`progress-bar`}>
                                 <div
                                     className={`progress-bar-filled ${getBarClass(progressData['Incorrect Percentage'])}`}
                                     style={{ width: getProgressBarWidth(progressData['Incorrect Percentage']) }}
@@ -127,7 +132,7 @@ const ParentProgressPage = () => {
                         </div>
                     </div>
                 ) : (
-                    <p>No progress data available.</p>
+                    <p></p>
                 )}
                 <ReturnButton />
             </div>

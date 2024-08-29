@@ -1,0 +1,22 @@
+{
+    "segments": [
+        {
+            "lesson_summary": "Summary of segment 1: In Grade 3, we learn about natural numbers in the thousands range. Decimal structure involves increasing or decreasing numbers by 10 and 100. The values of letters range from A to Z. Straight-line numbers help in understanding math operations within the thousands range, such as addition, subtraction, multiplication, and division. These skills are essential for mastering mathematical concepts and problem-solving. Let's continue exploring the exciting world of math and numbers together!",
+            "correct": null,
+            "attempts": 1,
+            "explanations": [],
+            "details": [
+                {
+                    "interaction_details": [],
+                    "choice_question": null,
+                    "student_question": null,
+                    "answer_to_question": null,
+                    "asked_question": false
+                }
+            ],
+            "student_feeling": null,
+            "part_number": 2,
+            "lesson_name": "Segment 1"
+        }
+    ]
+}

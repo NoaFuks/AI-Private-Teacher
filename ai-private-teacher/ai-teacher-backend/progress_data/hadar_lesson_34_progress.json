@@ -1,0 +1,24 @@
+{
+    "segments": [
+        {
+            "lesson_summary": "Lesson segment 2 completed.",
+            "correct": false,
+            "attempts": 1,
+            "explanations": [
+                "To find out how many days until the party, we need to count the days in between. From Monday to Tuesday is 1 day, from Tuesday to Wednesday is 2 days, and from Wednesday to Thursday is 3 days, making it a total of 3 days until the party on Thursday."
+            ],
+            "details": [
+                {
+                    "interaction_details": [],
+                    "choice_question": "Question: If today is Monday and the party is on Thursday, how many days until the party?\n\nA) 2\nB) 3\nC) 4\nD) 5",
+                    "student_question": null,
+                    "answer_to_question": null,
+                    "asked_question": false
+                }
+            ],
+            "student_feeling": null,
+            "part_number": 2,
+            "lesson_name": "Segment 2"
+        }
+    ]
+}

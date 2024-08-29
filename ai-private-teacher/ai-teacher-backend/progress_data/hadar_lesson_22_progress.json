@@ -1,0 +1,22 @@
+{
+    "segments": [
+        {
+            "lesson_summary": "Summary of segment 3: In math, we learn about measurements and geometry. We look at different types of angles, such as acute, obtuse, parallel lines, and shapes like triangles and quadrilaterals. We also study measurements of length, weight, volume, and time. Length can be measured in units like meters or centimeters, while weight can be in grams, kilograms, or tons. Volume measurements compare and measure the space occupied by objects. Time is another important measurement with units like days, hours, minutes, and seconds. Understanding these different measurements helps us solve real-world problems and makes math more interesting and practical. Let's dive into the world of measurements and dimensions to explore and understand more about the math that surrounds us every day.",
+            "correct": null,
+            "attempts": 1,
+            "explanations": [],
+            "details": [
+                {
+                    "interaction_details": [],
+                    "choice_question": null,
+                    "student_question": null,
+                    "answer_to_question": null,
+                    "asked_question": false
+                }
+            ],
+            "student_feeling": null,
+            "part_number": 2,
+            "lesson_name": "Segment 3"
+        }
+    ]
+}

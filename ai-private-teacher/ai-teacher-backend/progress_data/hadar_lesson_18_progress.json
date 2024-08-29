@@ -1,0 +1,22 @@
+{
+    "segments": [
+        {
+            "lesson_summary": "Summary of segment 2: In math, we learn about addition and subtraction with whole numbers. We use the commutative, associative, and distributive properties to help us solve math problems. We also practice adding and subtracting numbers to strengthen our understanding. Another important topic we cover is multiplication, where we learn about multiplying by tens and hundreds, both in written and oral forms. We also study division, which includes dividing numbers with remainders. Understanding the order of operations and using parentheses correctly is crucial in math. We also practice multiplication and division questions, as well as two-step problems and extra questions to challenge our thinking.",
+            "correct": null,
+            "attempts": 1,
+            "explanations": [],
+            "details": [
+                {
+                    "interaction_details": [],
+                    "choice_question": null,
+                    "student_question": null,
+                    "answer_to_question": null,
+                    "asked_question": false
+                }
+            ],
+            "student_feeling": null,
+            "part_number": 2,
+            "lesson_name": "Segment 2"
+        }
+    ]
+}

@@ -1,0 +1,22 @@
+{
+    "segments": [
+        {
+            "lesson_summary": "Summary of segment 5: To find the value of the digit 3 in the number 453, we look at its place value. In the number 453, the digit 3 is in the ones place, which means it represents units. So, the value of the digit 3 in the number 453 is 3. Similarly, in the number 55, the digit 5 on the right represents units, and the digit 5 on the left represents tens. Understanding place value helps us identify the worth of each digit in a number, making it easier to work with numbers and solve math problems.",
+            "correct": null,
+            "attempts": 1,
+            "explanations": [],
+            "details": [
+                {
+                    "interaction_details": [],
+                    "choice_question": null,
+                    "student_question": null,
+                    "answer_to_question": null,
+                    "asked_question": false
+                }
+            ],
+            "student_feeling": null,
+            "part_number": 2,
+            "lesson_name": "Segment 5"
+        }
+    ]
+}

@@ -97,6 +97,25 @@ h1 {
     background-color: midnightblue;
 }
 
+.btn-stop {
+    background-color: darkred;
+    align-items: center;
+    border: none;
+    padding: 8px 15px;
+    font-size: 1.1rem;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    display: inline-block;
+    margin: 10px;
+}
+
+.btn-stop:hover:not(:disabled) {
+    background-color: #e8735a;
+    transform: scale(1.05);
+}
+
 .btn:disabled {
     background-color: #a1c4d4;
     cursor: not-allowed;
