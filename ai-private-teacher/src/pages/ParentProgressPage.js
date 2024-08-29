@@ -31,6 +31,33 @@ const ParentProgressPage = () => {
             setError('Please enter a valid child name.');
         }
     };
+    
+    const getProgressBarWidth = (percentage) => {
+        const parsedPercentage = parseFloat(percentage);
+        return parsedPercentage > 0 ? `${parsedPercentage}%` : '5px';
+    };
+
+    const getBarClass = (percentage) => {
+        const parsedPercentage = parseFloat(percentage);
+        return parsedPercentage >= 50 ? 'correct-bar' : 'incorrect-bar';
+    };
+
+    const renderFeelingIcon = (feeling) => {
+        switch(feeling) {
+            case 'happy':
+                return <span role="img" aria-label="Happy">😊</span>;
+            case 'neutral':
+                return <span role="img" aria-label="Neutral">😐</span>;
+            case 'confused':
+                return <span role="img" aria-label="Confused">😕</span>;
+            case 'sad':
+                return <span role="img" aria-label="Sad">😞</span>;
+            default:
+                return null;
+        }
+    };
+
+    
 
     return (
         <div className="progress-page">
@@ -53,9 +80,27 @@ const ParentProgressPage = () => {
                 {progressData ? (
                     <div className="progress-content">
                         <h2>Student Progress</h2>
-                        <p><strong>Correct Percentage:</strong> {progressData['Correct Percentage']}</p>
-                        <p><strong>Incorrect Percentage:</strong> {progressData['Incorrect Percentage']}</p>
                         <p><strong>Total Questions:</strong> {progressData['Total Questions']}</p>
+                       <div className="progress-bar-container">
+                            <div className={`progress-bar`}>
+                                <div
+                                    className={`progress-bar-filled ${getBarClass(progressData['Correct Percentage'])}`}
+                                    style={{ width: getProgressBarWidth(progressData['Correct Percentage']) }}
+                                />
+                                <span className="progress-text">
+                                    {parseFloat(progressData['Correct Percentage']).toFixed(2)}%
+                                </span>
+                            </div>
+                            <div className={`progress-bar`}>
+                                <div
+                                    className={`progress-bar-filled ${getBarClass(progressData['Incorrect Percentage'])}`}
+                                    style={{ width: getProgressBarWidth(progressData['Incorrect Percentage']) }}
+                                />
+                                <span className="progress-text">
+                                    {parseFloat(progressData['Incorrect Percentage']).toFixed(2)}%
+                                </span>
+                            </div>
+                        </div>
                         <p className="topics-title"><strong>Topics Covered:</strong></p>
                         <ol>
                             {Array.isArray(progressData['Topics Covered']) ? progressData['Topics Covered']
@@ -65,6 +110,21 @@ const ParentProgressPage = () => {
                                 )) : 'No topics covered'}
                         </ol>
                         <p><strong>AI Opinion:</strong> {progressData['AI Opinion']}</p>
+                        {/* New section for displaying feelings */}
+                        <p className="topics-title"><strong>Student Feelings Timeline:</strong></p>
+                        <div className="feelings-timeline">
+                            {Array.isArray(progressData['Feelings']) ? progressData['Feelings']
+                                .slice()  // Create a shallow copy of the array
+                                .reverse()  // Reverse the order for reverse chronological display
+                                .map((feeling, index) => (
+                                    <React.Fragment key={index}>
+                                        <div className="timeline-item">
+                                            {renderFeelingIcon(feeling)}
+                                        </div>
+                                        {index < progressData['Feelings'].length - 1 && <div className="timeline-connector"></div>}
+                                    </React.Fragment>
+                                )) : 'No feelings recorded'}
+                        </div>
                     </div>
                 ) : (
                     <p>No progress data available.</p>

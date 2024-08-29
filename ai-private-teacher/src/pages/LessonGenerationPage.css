@@ -134,3 +134,22 @@ pre {
         font-size: 1rem;
     }
 }
+
+.stop-lesson-container {
+    position: relative;
+    left: 565px;
+    top: 10px;
+}
+
+.stop-lesson-container button {
+    width: 150px;
+    height: 40px;
+    font-size: 18px;
+    padding: 15px 25px;
+    border-radius: 10px;
+    text-align: center;    /* Centering the text horizontally */
+    display: flex;         /* Using flexbox for centering */
+    justify-content: center; /* Centering the text horizontally */
+    align-items: center;   /* Centering the text vertically */
+    line-height: 1;
+}

@@ -361,9 +361,9 @@ const LessonGenerationPage = () => {
                         </div>
 
                         {/* Stop Lesson Button */}
-                        <button type="button" className="btn btn-danger mt-4" onClick={handleStopLesson}>
+                        {/* <button type="button" className="btn btn-danger mt-4" onClick={handleStopLesson}>
                             Stop Lesson
-                        </button>
+                        </button> */}
                         {askForQuestions ? (
                             <div className="question-section mt-4">
                                 <h3>Do you have any questions?</h3>
@@ -430,8 +430,18 @@ const LessonGenerationPage = () => {
                                 <button type="button" className="btn btn-success" onClick={handleNextSegment}>Next Segment</button>
                             </div>
                         )}
+                        
                     </>
                 )}
+                {/* Stop Lesson Button at the bottom, after the lesson generation content */}
+                {lessonSegments.length > 0 && (
+                    <div className="stop-lesson-container">
+                        <button type="button" className="btn btn-danger mt-4" onClick={handleStopLesson}>
+                            Stop Lesson
+                        </button>
+                    </div>
+                )}
+
                 <ReturnButton />
             </div>
         </div>

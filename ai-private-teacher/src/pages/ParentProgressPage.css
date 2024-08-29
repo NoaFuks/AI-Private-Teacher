@@ -61,3 +61,76 @@ li {
     margin-bottom: 5px;
 }
 
+/* Progress Bar Styles */
+.progress-bar-container {
+    margin-top: 20px;
+}
+
+.progress-bar {
+    border-radius: 25px;
+    overflow: hidden;
+    position: relative;
+    margin-bottom: 10px;
+    height: 30px;
+    width: 100%;
+    border: 2px solid #ccc;  /* Default frame border color */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Optional: shadow for better visibility */
+    background-color: white;  /* Default background color */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1rem;  /* Adjust font size */
+    color: black;  /* Ensure the text is black */
+}
+
+.progress-bar-filled {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    z-index: 1;
+    border-radius: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;  /* Text color inside the filled area */
+    text-align: center;
+}
+
+.correct-bar {
+    background-color: #20d857;
+}
+
+.incorrect-bar {
+    background-color: #d31515;
+}
+
+.progress-bar .progress-text {
+    position: relative;
+    z-index: 2;
+    color: black;
+}
+
+/* ParentProgressPage.css */
+.feelings-timeline {
+    display: flex;
+    align-items: center;
+    margin: 20px 0;
+    overflow-x: auto;
+    white-space: nowrap;
+    padding: 10px;
+}
+
+.timeline-item {
+    font-size: 2rem; /* Adjust size for better visibility */
+}
+
+.timeline-connector {
+    width: 50px;
+    height: 2px;
+    background-color: #555;
+    margin: 0 10px;
+    flex-shrink: 0; /* Prevent the connector from shrinking */
+}
+
