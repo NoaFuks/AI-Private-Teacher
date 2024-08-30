@@ -226,7 +226,7 @@ const LessonGenerationPage = () => {
     
         if (currentSegmentIndex < lessonSegments.length - 1) {
             setCurrentSegmentIndex(currentSegmentIndex + 1);
-            setCurrentQuestionIndex(0);
+            setCurrentQuestionIndex(currentSegmentIndex + 1);
             setAskForQuestions(true);
         } else {
             setFeedback('Lesson completed!');
@@ -298,16 +298,16 @@ const LessonGenerationPage = () => {
                             <div className="modal-body text-center">
                                 <div className="d-flex justify-content-around">
                                     <div onClick={() => handleFeelingsSubmit('happy')} style={{ cursor: 'pointer' }}>
-                                        <span role="img" aria-label="Happy">😊</span> <br /> Happy
+                                        <span role="img" aria-label="Happy">😊</span> <br /> Going great
                                     </div>
                                     <div onClick={() => handleFeelingsSubmit('neutral')} style={{ cursor: 'pointer' }}>
-                                        <span role="img" aria-label="Neutral">😐</span> <br /> Neutral
+                                        <span role="img" aria-label="Neutral">😐</span> <br /> It's fine
                                     </div>
                                     <div onClick={() => handleFeelingsSubmit('confused')} style={{ cursor: 'pointer' }}>
-                                        <span role="img" aria-label="Confused">😕</span> <br /> Confused
+                                        <span role="img" aria-label="Confused">😕</span> <br /> I'm confused
                                     </div>
                                     <div onClick={() => handleFeelingsSubmit('sad')} style={{ cursor: 'pointer' }}>
-                                        <span role="img" aria-label="Sad">😞</span> <br /> Sad
+                                        <span role="img" aria-label="Sad">😞</span> <br /> It's really hard
                                     </div>
                                 </div>
                             </div>
@@ -317,7 +317,7 @@ const LessonGenerationPage = () => {
             )}
 
             <div className="lesson-card">
-                <Icon size={80} />
+                <Icon size={110} />
                 <h1 className="text-center mb-4">Lesson Generation</h1>
                 {!lessonSegments.length && (
                     <form onSubmit={handleGenerateLesson}>

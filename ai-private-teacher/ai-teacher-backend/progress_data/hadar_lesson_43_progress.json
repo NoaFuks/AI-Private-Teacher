@@ -1,0 +1,24 @@
+{
+    "segments": [
+        {
+            "lesson_summary": "Lesson segment 3 completed.",
+            "correct": true,
+            "attempts": 1,
+            "explanations": [
+                "When we multiply a number by 100, we add two zeros to the right of the original number. This helps us to make the number larger by a factor of 100."
+            ],
+            "details": [
+                {
+                    "interaction_details": [],
+                    "choice_question": "Question: What happens when we multiply a number by 100?\n\nA. We add two zeros to the left of the original number\nB. We add two zeros to the right of the original number\nC. We subtract two zeros from the original number\nD. We divide the original number by 100",
+                    "student_question": null,
+                    "answer_to_question": null,
+                    "asked_question": false
+                }
+            ],
+            "student_feeling": null,
+            "part_number": 2,
+            "lesson_name": "Segment 3"
+        }
+    ]
+}

@@ -1,0 +1,24 @@
+{
+    "segments": [
+        {
+            "lesson_summary": "Lesson segment 1 completed.",
+            "correct": false,
+            "attempts": 1,
+            "explanations": [
+                "In this case, we need to count the days from Tuesday to Monday. If it is currently Tuesday, then there are 5 more days (Wednesday, Thursday, Friday, Saturday, and Sunday) until the party on Monday."
+            ],
+            "details": [
+                {
+                    "interaction_details": [],
+                    "choice_question": "Question: If today is Tuesday and a party is on Monday, how many days until the party?\na) 5\nb) 6\nc) 7\nd) 8",
+                    "student_question": null,
+                    "answer_to_question": null,
+                    "asked_question": false
+                }
+            ],
+            "student_feeling": null,
+            "part_number": 2,
+            "lesson_name": "Segment 1"
+        }
+    ]
+}

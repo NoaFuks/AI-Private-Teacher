@@ -47,7 +47,7 @@ const ParentProgressPage = () => {
             case 'happy':
                 return <span role="img" aria-label="Going great">😊</span>;
             case 'neutral':
-                return <span role="img" aria-label="All good">😐</span>;
+                return <span role="img" aria-label="It's fine">😐</span>;
             case 'confused':
                 return <span role="img" aria-label="I'm confused">😕</span>;
             case 'sad':
@@ -60,7 +60,7 @@ const ParentProgressPage = () => {
     return (
         <div className="progress-page">
             <div className="progress-card">
-                <Icon size={80} />
+                <Icon size={110} />
                 <h1 className="text-center mb-4">Progress Page</h1>
                 <form onSubmit={handleSubmit}>
                     <div className="form-group mb-3">

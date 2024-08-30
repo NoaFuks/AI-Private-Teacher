@@ -1,0 +1,22 @@
+{
+    "segments": [
+        {
+            "lesson_summary": "Summary of segment 1: In math class, we are learning about conversions and examples. One topic we are exploring is different units of measure, such as hours, weeks, and clocks. For example, if today is Tuesday and a party is on Monday, how many days until the party? How many possible answers are there? When we multiply a number by 10, we add a zero to the right of the number. It's like saying the number grows by 10. We can demonstrate to students why adding a zero to the right of a number is equal to multiplying by 10 through simple arithmetic.",
+            "correct": null,
+            "attempts": 1,
+            "explanations": [],
+            "details": [
+                {
+                    "interaction_details": [],
+                    "choice_question": null,
+                    "student_question": null,
+                    "answer_to_question": null,
+                    "asked_question": false
+                }
+            ],
+            "student_feeling": null,
+            "part_number": 2,
+            "lesson_name": "Segment 1"
+        }
+    ]
+}

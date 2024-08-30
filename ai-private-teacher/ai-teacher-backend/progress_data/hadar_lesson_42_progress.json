@@ -1,0 +1,22 @@
+{
+    "segments": [
+        {
+            "lesson_summary": "Summary of segment 2: When we increase a number by a factor of 10, we are essentially adding a zero to the right of the original number. For example, if we have the number 112, which consists of 2 units, 1 ten, and 1 hundred, when we increase it by a factor of 10, we get the number 1,120. This is because the 2 units move to the tens place as two tens, the 1 ten moves to the hundreds place as one hundred, and the 1 hundred moves to the thousands place as one thousand. So, when we increase a number by a factor of 10, we are essentially adding a zero to the right of the original number.",
+            "correct": null,
+            "attempts": 1,
+            "explanations": [],
+            "details": [
+                {
+                    "interaction_details": [],
+                    "choice_question": null,
+                    "student_question": null,
+                    "answer_to_question": null,
+                    "asked_question": false
+                }
+            ],
+            "student_feeling": null,
+            "part_number": 2,
+            "lesson_name": "Segment 2"
+        }
+    ]
+}

@@ -1,0 +1,24 @@
+{
+    "segments": [
+        {
+            "lesson_summary": "Lesson segment 2 completed.",
+            "correct": false,
+            "attempts": 1,
+            "explanations": [
+                "When we increase a number by a factor of 10, we add a zero to the right of the original number. In this case, the number 345 becomes 3,540 when increased by a factor of 10."
+            ],
+            "details": [
+                {
+                    "interaction_details": [],
+                    "choice_question": "Question: If we increase the number 345 by a factor of 10, what would be the resulting number?\nA. 3,540\nB. 3,405\nC. 3450\nD. 34500",
+                    "student_question": null,
+                    "answer_to_question": null,
+                    "asked_question": false
+                }
+            ],
+            "student_feeling": null,
+            "part_number": 2,
+            "lesson_name": "Segment 2"
+        }
+    ]
+}
