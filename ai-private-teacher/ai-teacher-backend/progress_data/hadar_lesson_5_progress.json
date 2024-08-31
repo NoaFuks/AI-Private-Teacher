@@ -1,14 +1,16 @@
 {
     "segments": [
         {
-            "lesson_summary": "Summary of segment 2: In math, addition and subtraction are essential concepts that help us solve problems. We can use various rules like the commutative, associative, and distributive properties to help us simplify calculations. By practicing addition and subtraction problems, we can strengthen our understanding of these operations. Additionally, learning about multiplication and division, including multiplying by multiples of ten and one hundred, can make math easier and more efficient. Understanding how to work with remainders and decimal numbers is also crucial. By practicing different types of math problems and following the order of operations, we can become more confident and skilled in math.",
-            "correct": null,
+            "lesson_summary": "Lesson segment 2 completed.",
+            "correct": true,
             "attempts": 1,
-            "explanations": [],
+            "explanations": [
+                "Weight is typically measured in grams, so the correct answer is b. Meters are used to measure length, liters are used to measure volume, and seconds are used to measure time."
+            ],
             "details": [
                 {
                     "interaction_details": [],
-                    "choice_question": null,
+                    "choice_question": "Question: What unit of measurement is commonly used to measure weight?\na. Meters\nb. Grams\nc. Liters\nd. Seconds",
                     "student_question": null,
                     "answer_to_question": null,
                     "asked_question": false

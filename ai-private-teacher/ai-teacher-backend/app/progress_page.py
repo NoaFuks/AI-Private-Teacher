@@ -59,7 +59,6 @@ class ProgressTracker:
         except Exception as e:
             print(f"Failed to save progress: {e}")
 
-        # Increment the part number for the next part of the same lesson
         self.current_part_number += 1
 
 
@@ -68,7 +67,7 @@ class ProgressTracker:
 
         if "stopped" in lesson_summary.lower():
             print(f"Skipped saving the following summary: {lesson_summary}")
-            return  # Skip saving this segment
+            return
 
         lesson_data = {
             'lesson_summary': lesson_summary,
@@ -82,7 +81,7 @@ class ProgressTracker:
                 "answer_to_question": None,
                 "asked_question": False
             }] if interaction_details else [],
-            'student_feeling': student_feeling  # Save the student's feeling
+            'student_feeling': student_feeling
         }
 
         if interaction_details and interaction_details.get('student_question'):

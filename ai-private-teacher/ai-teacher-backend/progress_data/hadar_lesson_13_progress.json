@@ -1,22 +1,24 @@
 {
     "segments": [
         {
-            "lesson_summary": "",
-            "correct": null,
+            "lesson_summary": "Lesson segment 3 completed.",
+            "correct": false,
             "attempts": 1,
-            "explanations": [],
+            "explanations": [
+                "When we multiply a number by 100, we add two zeros to the right of the original number, increasing its value by two place values."
+            ],
             "details": [
                 {
                     "interaction_details": [],
-                    "choice_question": null,
+                    "choice_question": "Question: When we multiply a number by 100, what do we do to the number?\nA. Add two zeros to the right\nB. Subtract two zeros from the left\nC. Add one zero to the right\nD. Divide the number by 100",
                     "student_question": null,
                     "answer_to_question": null,
                     "asked_question": false
                 }
             ],
-            "student_feeling": "sad",
+            "student_feeling": null,
             "part_number": 2,
-            "lesson_name": "Segment 6"
+            "lesson_name": "Segment 3"
         }
     ]
 }

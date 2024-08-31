@@ -1,22 +1,24 @@
 {
     "segments": [
         {
-            "lesson_summary": "",
-            "correct": null,
+            "lesson_summary": "Lesson segment 1 completed.",
+            "correct": false,
             "attempts": 1,
-            "explanations": [],
+            "explanations": [
+                "Addition is the mathematical operation where you find the total of two or more numbers by combining them together. Subtraction involves taking away one number from another, multiplication is repeated addition, and division is splitting a number into equal parts."
+            ],
             "details": [
                 {
                     "interaction_details": [],
-                    "choice_question": null,
+                    "choice_question": "Question: Which mathematical operation involves finding the total of two or more numbers?\nA. Addition\nB. Subtraction\nC. Multiplication\nD. Division",
                     "student_question": null,
                     "answer_to_question": null,
                     "asked_question": false
                 }
             ],
-            "student_feeling": "sad",
+            "student_feeling": null,
             "part_number": 2,
-            "lesson_name": "Segment 4"
+            "lesson_name": "Segment 1"
         }
     ]
 }

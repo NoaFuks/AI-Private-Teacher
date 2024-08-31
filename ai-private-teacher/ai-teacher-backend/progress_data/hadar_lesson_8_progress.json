@@ -1,7 +1,7 @@
 {
     "segments": [
         {
-            "lesson_summary": "",
+            "lesson_summary": "Summary of segment 1: In math class, we are learning about conversions and examples. One interesting topic we are exploring is different conversion laws, such as time conversions like days to hours and clocks. For example, if today is Tuesday and the party is on Monday, how many days until the party? How many possible answers are there? When we multiply a number by 10, we add a zero to the right of the number. It's like increasing the number tenfold. We can demonstrate this to students by explaining why adding a zero to the right of a number is equivalent to multiplying it by 10, which we can do with simple arithmetic.",
             "correct": null,
             "attempts": 1,
             "explanations": [],
@@ -14,9 +14,9 @@
                     "asked_question": false
                 }
             ],
-            "student_feeling": "confused",
+            "student_feeling": null,
             "part_number": 2,
-            "lesson_name": "Segment 4"
+            "lesson_name": "Segment 1"
         }
     ]
 }

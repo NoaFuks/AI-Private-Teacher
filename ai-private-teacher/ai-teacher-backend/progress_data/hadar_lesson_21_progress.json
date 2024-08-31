@@ -5,12 +5,12 @@
             "correct": false,
             "attempts": 1,
             "explanations": [
-                "In the decimal system, the digits range from 0 to 9, giving a total of 10 possible digits. Each digit's place value increases by a factor of 10 as you move to the left."
+                "When we multiply a number by 100, we add two zeroes to the right of the original number. This is because 100 is a two-digit number, so when we multiply by it, we are essentially multiplying by 10 twice, which adds two zeroes."
             ],
             "details": [
                 {
                     "interaction_details": [],
-                    "choice_question": "Question: In the decimal system, what are the place values for each digit?\nA. 0-8\nB. 1-10\nC. 0-9\nD. 2-11",
+                    "choice_question": "Question: When we multiply a number by 100, what do we add to the right of the original number?\nA. One zero\nB. Two zeroes\nC. Three zeroes\nD. Four zeroes",
                     "student_question": null,
                     "answer_to_question": null,
                     "asked_question": false

@@ -109,18 +109,18 @@ const ParentProgressPage = () => {
                         <p className="topics-title"><strong>Topics Covered:</strong></p>
                         <ol>
                             {Array.isArray(progressData['Topics Covered']) ? progressData['Topics Covered']
-                                .filter(topic => topic)  // Filter out empty or falsy values
+                                .filter(topic => topic)  
                                 .map((topic, index) => (
                                     <li key={index}>{topic}</li>
                                 )) : 'No topics covered'}
                         </ol>
                         <p><strong>AI Opinion:</strong> {progressData['AI Opinion']}</p>
-                        {/* New section for displaying feelings */}
+    
                         <p className="topics-title"><strong>Student Feelings Timeline:</strong></p>
                         <div className="feelings-timeline">
                             {Array.isArray(progressData['Feelings']) ? progressData['Feelings']
-                                .slice()  // Create a shallow copy of the array
-                                .reverse()  // Reverse the order for reverse chronological display
+                                .slice()  
+                                .reverse()  
                                 .map((feeling, index) => (
                                     <React.Fragment key={index}>
                                         <div className="timeline-item">

@@ -1,16 +1,14 @@
 {
     "segments": [
         {
-            "lesson_summary": "Lesson segment 2 completed.",
-            "correct": false,
+            "lesson_summary": "Summary of segment 1: In math Class 3, we learn about conversions and examples like the week and time. One example could be figuring out when a party is happening on Tuesday when it was originally scheduled for Monday. How many days until the party now and how many answers could there be? When you increase a number by a factor of 10, you add a zero to the right of the number. This is like multiplying the number by 10. It's easier to understand this concept using calculations and examples.",
+            "correct": null,
             "attempts": 1,
-            "explanations": [
-                "In the decimal system, the digits range from 0 to 9, giving a total of 10 possible digits. Each digit's place value increases by a factor of 10 as you move to the left."
-            ],
+            "explanations": [],
             "details": [
                 {
                     "interaction_details": [],
-                    "choice_question": "Question: In the decimal system, what are the place values for each digit?\nA. 0-8\nB. 1-10\nC. 0-9\nD. 2-11",
+                    "choice_question": null,
                     "student_question": null,
                     "answer_to_question": null,
                     "asked_question": false
@@ -18,7 +16,7 @@
             ],
             "student_feeling": null,
             "part_number": 2,
-            "lesson_name": "Segment 2"
+            "lesson_name": "Segment 1"
         }
     ]
 }

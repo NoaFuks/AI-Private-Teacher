@@ -1,16 +1,14 @@
 {
     "segments": [
         {
-            "lesson_summary": "Lesson segment 1 completed.",
-            "correct": false,
+            "lesson_summary": "Summary of segment 3: When we multiply a number by 100, we add two zeros to the right of the original number. The opposite happens when we divide, the number gets smaller. For example, if we have 9,000 and we want to place it on the number line, it would go straight at number 3. In this way, understanding how numbers increase or decrease can help us solve math problems more easily. And just like how we count the alphabet from A to Z, numbers follow a similar pattern from 1 to 3, where each number has its place on the number line. Learning about the placement of numbers can help us with various math problems and make math even more fun and interesting to explore!",
+            "correct": null,
             "attempts": 1,
-            "explanations": [
-                "In the decimal system, the digits range from 0 to 9, giving a total of 10 possible digits. Each digit's place value increases by a factor of 10 as you move to the left."
-            ],
+            "explanations": [],
             "details": [
                 {
                     "interaction_details": [],
-                    "choice_question": "Question: In the decimal system, what are the place values for each digit?\nA. 0-8\nB. 1-10\nC. 0-9\nD. 2-11",
+                    "choice_question": null,
                     "student_question": null,
                     "answer_to_question": null,
                     "asked_question": false
@@ -18,7 +16,7 @@
             ],
             "student_feeling": null,
             "part_number": 2,
-            "lesson_name": "Segment 1"
+            "lesson_name": "Segment 3"
         }
     ]
 }

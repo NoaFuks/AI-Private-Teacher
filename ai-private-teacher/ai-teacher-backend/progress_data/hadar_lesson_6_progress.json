@@ -1,16 +1,14 @@
 {
     "segments": [
         {
-            "lesson_summary": "Lesson segment 3 completed.",
-            "correct": false,
+            "lesson_summary": "Summary of segment 2: In math, we will be learning about addition and subtraction with one-digit numbers, using the properties of commutativity, associativity, and distributivity. We will also practice adding and subtracting, multiplying and dividing, as well as working with multiples and factors. Understanding the concept of division within the hundreds place and dealing with remainders will be part of our lessons. Additionally, we will explore multiplication with single-digit numbers, learning the order of operations, and using parentheses. By the end of this unit, you will be able to solve two-step problems and answer additional math questions confidently. Get ready to enhance your math skills and have fun with numbers!",
+            "correct": null,
             "attempts": 1,
-            "explanations": [
-                "Natural numbers in Grade 3 usually involve numbers in the thousands range, such as 1,000 to 9,999. This range helps students understand and practice math operations within this specific numerical range."
-            ],
+            "explanations": [],
             "details": [
                 {
                     "interaction_details": [],
-                    "choice_question": "Question: What range of numbers do natural numbers in Grade 3 typically involve?\na. Hundreds range\nb. Thousands range\nc. Tens range\nd. Millions range",
+                    "choice_question": null,
                     "student_question": null,
                     "answer_to_question": null,
                     "asked_question": false
@@ -18,7 +16,7 @@
             ],
             "student_feeling": null,
             "part_number": 2,
-            "lesson_name": "Segment 3"
+            "lesson_name": "Segment 2"
         }
     ]
 }

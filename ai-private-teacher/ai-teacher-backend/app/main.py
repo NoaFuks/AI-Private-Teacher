@@ -14,7 +14,7 @@ app = FastAPI()
 # Add CORS middleware to allow requests from your frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # Frontend URL
+    allow_origins=["http://localhost:3000"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -23,7 +23,7 @@ app.add_middleware(
 # Setup directories for storing profiles, progress, and PDFs
 PROFILE_DIR = './profiles'
 PROGRESS_DIR = './progress_data'
-PDF_DIR = './DataBase'  # Directory containing PDF lessons
+PDF_DIR = './DataBase'
 
 # Ensure the directories exist
 os.makedirs(PROFILE_DIR, exist_ok=True)
@@ -81,12 +81,11 @@ async def generate_lesson(name: str = Form(...), file: UploadFile = File(None)):
             with open(file_path, "wb") as buffer:
                 shutil.copyfileobj(file.file, buffer)
 
-        # Find the latest PDF in the student's directory to generate the lesson
         pdf_files = [f for f in os.listdir(student_dir) if f.endswith('.pdf')]
         if not pdf_files:
             raise HTTPException(status_code=404, detail="No PDF files found for this student.")
 
-        pdf_path = os.path.join(student_dir, pdf_files[-1])  # Use the most recently uploaded PDF
+        pdf_path = os.path.join(student_dir, pdf_files[-1])
 
         profile_path = os.path.join(PROFILE_DIR, f"{student_name}_profile.json")
         if not os.path.exists(profile_path):
@@ -125,10 +124,10 @@ async def validate_answer(request: Request):
         student_answer = data.get("student_answer")
         correct_answer = data.get("correct_answer")
         explanation = data.get("explanation")
-        segment_index = data.get("segment_index")  # Pass this from the client
-        student_name = data.get("student_name")  # Pass this from the client
-        segment_content = data.get("segment_content")  # Pass this from the client
-        question = data.get("question")  # Pass the question from the client
+        segment_index = data.get("segment_index")
+        student_name = data.get("student_name")
+        segment_content = data.get("segment_content")
+        question = data.get("question")
 
         if student_answer.strip().lower() == correct_answer.strip().lower():
             feedback = "Correct! Well done!"
@@ -148,7 +147,7 @@ async def validate_answer(request: Request):
         }
         progress_tracker.update_progress(
             lesson=f"Segment {segment_index + 1}",
-            correct=isCorrect,  # Pass isCorrect to the progress tracker
+            correct=isCorrect,
             explanation=explanation,
             interaction_details=interaction_details,
             lesson_summary=f"Lesson segment {segment_index + 1} completed."
@@ -166,8 +165,6 @@ async def get_progress(student_name: str):
         # Initialize the ParentProgressPage to get student progress
         parent_page = ParentProgressPage(progress_directory=PROGRESS_DIR)
         summary = parent_page.summarize_child_progress(student_name)
-
-        print("Progress Summary: ", summary)  # Debug log
 
         if summary:
             return summary
@@ -192,7 +189,7 @@ async def save_progress(request: Request):
         student_question = progress_data.get("student_question", "")
         answer_to_question = progress_data.get("answer_to_question", "")
         asked_question = progress_data.get("asked_question", False)
-        student_feeling = progress_data.get("student_feeling", None)  # Extract student_feeling here
+        student_feeling = progress_data.get("student_feeling", None)
 
         interaction_details = {
             "segmentContent": segment_content,
@@ -210,7 +207,7 @@ async def save_progress(request: Request):
             explanation="",
             interaction_details=interaction_details,
             lesson_summary=summary,
-            student_feeling=student_feeling  # Pass it to the ProgressTracker here
+            student_feeling=student_feeling
         )
 
         return {"message": "Progress saved successfully"}

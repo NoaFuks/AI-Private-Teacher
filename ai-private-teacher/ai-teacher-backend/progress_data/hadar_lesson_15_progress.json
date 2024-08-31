@@ -1,7 +1,7 @@
 {
     "segments": [
         {
-            "lesson_summary": "Summary of segment 1: In math, when working with large numbers, we often use the decimal system. This system involves the digits 0-9 and the place values increase by a factor of 10 each time you move to the left. For example, if you have the number 53, the 3 is in the ones place and the 5 is in the tens place. When we want to increase a number by a factor of 10, we simply move it one place value to the left. For example, if we have the number 53 and we want to increase it by a factor of 10, we get 530. In the decimal system, the letters A to T can also represent numerical values. Operations like addition and subtraction can be done easily with these numbers, making math fun and practical!",
+            "lesson_summary": "",
             "correct": null,
             "attempts": 1,
             "explanations": [],
@@ -14,9 +14,9 @@
                     "asked_question": false
                 }
             ],
-            "student_feeling": null,
+            "student_feeling": "confused",
             "part_number": 2,
-            "lesson_name": "Segment 1"
+            "lesson_name": "Segment 4"
         }
     ]
 }

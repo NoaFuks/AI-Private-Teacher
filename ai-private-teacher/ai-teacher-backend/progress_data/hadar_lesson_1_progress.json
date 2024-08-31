@@ -5,12 +5,12 @@
             "correct": false,
             "attempts": 1,
             "explanations": [
-                "Natural numbers in Grade 3 usually involve numbers in the thousands range, such as 1,000 to 9,999. This range helps students understand and practice math operations within this specific numerical range."
+                "The decimal system is made up of ten digits, from 0 to 9. Each of these digits has its own value in a number, and they are used to represent larger quantities when combined."
             ],
             "details": [
                 {
                     "interaction_details": [],
-                    "choice_question": "Question: What range of numbers do natural numbers in Grade 3 typically involve?\na. Hundreds range\nb. Thousands range\nc. Tens range\nd. Millions range",
+                    "choice_question": "Question: How many digits are in the decimal system?\na. 5\nb. 10\nc. 15\nd. 20",
                     "student_question": null,
                     "answer_to_question": null,
                     "asked_question": false

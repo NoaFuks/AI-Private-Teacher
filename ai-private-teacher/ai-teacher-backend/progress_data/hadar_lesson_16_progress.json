@@ -1,22 +1,24 @@
 {
     "segments": [
         {
-            "lesson_summary": "",
-            "correct": null,
+            "lesson_summary": "Lesson segment 1 completed.",
+            "correct": false,
             "attempts": 1,
-            "explanations": [],
+            "explanations": [
+                "If the original party was scheduled for Monday and the new day is Tuesday, there is only one day until the rescheduled party."
+            ],
             "details": [
                 {
                     "interaction_details": [],
-                    "choice_question": null,
+                    "choice_question": "Question: How many days until the rescheduled party on Tuesday, if the original day was Monday?\nA) 1\nB) 2\nC) 6\nD) 7\n\nCorrect",
                     "student_question": null,
                     "answer_to_question": null,
                     "asked_question": false
                 }
             ],
-            "student_feeling": "happy",
+            "student_feeling": null,
             "part_number": 2,
-            "lesson_name": "Segment 2"
+            "lesson_name": "Segment 1"
         }
     ]
 }

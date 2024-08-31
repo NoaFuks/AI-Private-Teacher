@@ -140,40 +140,31 @@ class LessonGenerator:
 # Example usage:
 if __name__ == "__main__":
     from UserProfile import UserProfileManager
-    from progress_page import ProgressTracker  # Make sure to import from the correct module
+    from progress_page import ProgressTracker
 
     manager = UserProfileManager()
     manager.load_profiles_from_file('user_profiles.json')
 
-    user_profile = manager.profiles[0]  # Just an example to use the first profile
-    api_key = "sk-proj-hOTTh1Qv8iNbIumiJ3S6T3BlbkFJcB15KrFMIjwvwamTTPPp"  # Replace with your actual OpenAI API key
+    user_profile = manager.profiles[0]
+    api_key = "sk-proj-hOTTh1Qv8iNbIumiJ3S6T3BlbkFJcB15KrFMIjwvwamTTPPp"
 
     progress_tracker = ProgressTracker(student_name=user_profile.name)
 
     # Path to the folder containing PDF files
     pdf_folder_path = r".\DataBase"
 
-    # Check if the directory exists
     if not os.path.exists(pdf_folder_path):
         print(f"The directory {pdf_folder_path} does not exist.")
     else:
-        # List all PDF files in the folder
         pdf_files = [f for f in os.listdir(pdf_folder_path) if f.endswith('.pdf')]
 
         if not pdf_files:
             print("No PDF files found in the specified directory.")
         else:
-            pdf_file = pdf_files[0]  # Pick the first PDF file for this session
+            pdf_file = pdf_files[0]
             pdf_path = os.path.join(pdf_folder_path, pdf_file)
             generator = LessonGenerator(user_profile, api_key, progress_tracker)
             lesson = generator.generate_lesson(pdf_path)
-            # for pdf_file in pdf_files:
-            #     pdf_path = os.path.join(pdf_folder_path, pdf_file)
-            #     # generator = LessonGenerator(user_profile, api_key)
-            #     generator = LessonGenerator(user_profile, api_key, progress_tracker)
-            #     lesson = generator.generate_lesson(pdf_path)
-            #     # print(f"Lesson generated from {pdf_file}:\n")
-            #     # print(lesson)
             print("\n" + "=" * 80 + "\n")
 
 

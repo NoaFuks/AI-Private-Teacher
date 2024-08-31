@@ -1,14 +1,16 @@
 {
     "segments": [
         {
-            "lesson_summary": "Summary of segment 3: In math, measurements and geometry are important concepts to understand. Measurements involve length, weight, volume, and time. For length measurements, we use units like grams, kilograms, and tons. When it comes to volume, we compare and measure the volume of different shapes and objects. Additionally, we measure time using units such as days, hours, minutes, and seconds. Geometry deals with angles, parallel lines, triangles, and squares. Understanding these concepts is crucial in solving math problems and analyzing data effectively.",
-            "correct": null,
+            "lesson_summary": "Lesson segment 1 completed.",
+            "correct": true,
             "attempts": 1,
-            "explanations": [],
+            "explanations": [
+                "To convert days to hours, we need to multiply the number of days by 24 (since there are 24 hours in a day). Therefore, 4 days x 24 hours/day = 96 hours until the party. Since the correct answer is A, 48 is not the correct answer."
+            ],
             "details": [
                 {
                     "interaction_details": [],
-                    "choice_question": null,
+                    "choice_question": "Question: If the party is in 4 days, how many hours until the party?\nA. 48\nB. 36\nC. 24\nD. 12",
                     "student_question": null,
                     "answer_to_question": null,
                     "asked_question": false
@@ -16,7 +18,7 @@
             ],
             "student_feeling": null,
             "part_number": 2,
-            "lesson_name": "Segment 3"
+            "lesson_name": "Segment 1"
         }
     ]
 }

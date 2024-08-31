@@ -1,19 +1,17 @@
 {
     "segments": [
         {
-            "lesson_summary": "Lesson segment 2 completed.",
-            "correct": false,
+            "lesson_summary": "",
+            "correct": null,
             "attempts": 1,
-            "explanations": [
-                "Natural numbers in Grade 3 usually involve numbers in the thousands range, such as 1,000 to 9,999. This range helps students understand and practice math operations within this specific numerical range."
-            ],
+            "explanations": [],
             "details": [
                 {
                     "interaction_details": [],
-                    "choice_question": "Question: What range of numbers do natural numbers in Grade 3 typically involve?\na. Hundreds range\nb. Thousands range\nc. Tens range\nd. Millions range",
-                    "student_question": null,
-                    "answer_to_question": null,
-                    "asked_question": false
+                    "choice_question": null,
+                    "student_question": "10 multy 10",
+                    "answer_to_question": "10 multiplied by 10 equals 100.",
+                    "asked_question": true
                 }
             ],
             "student_feeling": null,

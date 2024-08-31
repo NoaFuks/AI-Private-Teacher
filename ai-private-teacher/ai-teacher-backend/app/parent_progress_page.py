@@ -4,6 +4,7 @@ import requests
 
 class ParentProgressPage:
     def __init__(self, progress_directory="progress_data", output_file="children_progress_summary.json", api_key=None):
+
         self.progress_directory = progress_directory
         self.output_file = output_file
         self.api_key = "sk-proj-hOTTh1Qv8iNbIumiJ3S6T3BlbkFJcB15KrFMIjwvwamTTPPp"
@@ -50,13 +51,14 @@ class ParentProgressPage:
         correct_answers = 0
         incorrect_answers = 0
         total_questions = 0
-        topics_covered_set = set()  # Using a set to store unique topics
-        feelings = []  # To collect feelings
+        topics_covered_set = set()
+
+        feelings = []
 
         # Iterate through all the lessons to accumulate data
         for lesson_data in progress_data:
             segments = lesson_data.get('segments', [])
-            print(f"Processing {len(segments)} segments in this lesson.")  # Debugging output
+            print(f"Processing {len(segments)} segments in this lesson.")
             for segment in segments:
                 # Check and update question correctness data
                 if segment.get('correct') is not None:
@@ -70,20 +72,17 @@ class ParentProgressPage:
                 segment_summary = segment.get('lesson_summary', '').strip()
                 print(f"Processing segment summary: '{segment_summary}'")  # Debugging output
 
-                # Filter out non-informative summaries
                 if segment_summary and "lesson segment" not in segment_summary.lower() and "completed" not in segment_summary.lower():
                     summarized_topic = self.summarize_topic(segment_summary)
                     topics_covered_set.add(summarized_topic)  # Add to set to ensure uniqueness
 
-                # Collect the student's feelings
                 student_feeling = segment.get('student_feeling')
                 if student_feeling:
                     feelings.append(student_feeling)
 
-        # Convert set back to a list for ordered display
         topics_covered = list(topics_covered_set)
 
-        print(f"Total segments processed: {len(topics_covered)}")  # Debugging output
+        print(f"Total segments processed: {len(topics_covered)}")
 
         # Calculate percentages
         correct_percentage = (correct_answers / total_questions * 100) if total_questions > 0 else 0
@@ -96,27 +95,25 @@ class ParentProgressPage:
             "Correct Percentage": f"{correct_percentage:.2f}%",
             "Incorrect Percentage": f"{incorrect_percentage:.2f}%",
             "Total Questions": total_questions,
-            "Topics Covered": topics_covered,  # Return the summarized topics
+            "Topics Covered": topics_covered,
             "AI Opinion": ai_opinion,
-            "Feelings": feelings  # Include the feelings in the summary
+            "Feelings": feelings
         }
 
         return summary
 
     def summarize_topic(self, summary):
-        # Check if the summary can be shortened manually
         words = summary.split()
         if len(words) <= 3:
-            return summary  # Already 3 words or less
+            return summary
         else:
-            # Send a request to the AI to summarize it in 2-3 words
             prompt = f"Summarize the following topic in 3-4 words: {summary} write what the subject of the summery (math, english and etc.) and then write what exactly form this subject"
             summarized_topic = self.request_ai_summary(prompt)
             return summarized_topic
 
     def request_ai_summary(self, prompt):
         if not self.api_key:
-            return "Summary unavailable"  # Fallback if no API key is provided
+            return "Summary unavailable"
         url = 'https://api.openai.com/v1/chat/completions'
         headers = {
             'Content-Type': 'application/json',
@@ -125,13 +122,13 @@ class ParentProgressPage:
         data = {
             'model': 'gpt-3.5-turbo',
             'messages': [{'role': 'user', 'content': prompt}],
-            'max_tokens': 10  # Limit to a short response
+            'max_tokens': 10
         }
         response = requests.post(url, headers=headers, json=data)
         if response.status_code == 200:
             result = response.json()
             return result['choices'][0]['message']['content'].strip()
         else:
-            return "Summary unavailable"  # Fallback if the request fails
+            return "Summary unavailable"
 
 

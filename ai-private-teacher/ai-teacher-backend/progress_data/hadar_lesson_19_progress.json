@@ -1,16 +1,16 @@
 {
     "segments": [
         {
-            "lesson_summary": "Lesson segment 3 completed.",
+            "lesson_summary": "Lesson segment 2 completed.",
             "correct": false,
             "attempts": 1,
             "explanations": [
-                "In the decimal system, the digits range from 0 to 9, giving a total of 10 possible digits. Each digit's place value increases by a factor of 10 as you move to the left."
+                "When we multiply a number by 10, we add a 0 to the right of the original number. So, when we multiply 235 by 10, we get 2350."
             ],
             "details": [
                 {
                     "interaction_details": [],
-                    "choice_question": "Question: In the decimal system, what are the place values for each digit?\nA. 0-8\nB. 1-10\nC. 0-9\nD. 2-11",
+                    "choice_question": "Question: If we multiply the number 235 by 10, what will the new number be?\n\nA) 253\nB) 2350\nC) 2305\nD) 2530\n\nCorrect",
                     "student_question": null,
                     "answer_to_question": null,
                     "asked_question": false
@@ -18,7 +18,7 @@
             ],
             "student_feeling": null,
             "part_number": 2,
-            "lesson_name": "Segment 3"
+            "lesson_name": "Segment 2"
         }
     ]
 }

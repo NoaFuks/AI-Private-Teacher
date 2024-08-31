@@ -18,24 +18,14 @@ const LessonGenerationPage = () => {
     const [answerToQuestion, setAnswerToQuestion] = useState('');
     const [showNextButton, setShowNextButton] = useState(false);
     const [showNextSegmentButton, setShowNextSegmentButton] = useState(false);
-    const [pdfFile, setPdfFile] = useState(null); // New state for the uploaded PDF
-    const [isListening, setIsListening] = useState(false); // Manage speech recognition state
+    const [pdfFile, setPdfFile] = useState(null); 
+    const [isListening, setIsListening] = useState(false); 
 
-    const [showFeelingsModal, setShowFeelingsModal] = useState(false); // Control modal visibility
-    const [selectedFeeling, setSelectedFeeling] = useState(''); // Track the selected feeling
+    const [showFeelingsModal, setShowFeelingsModal] = useState(false); 
+    const [selectedFeeling, setSelectedFeeling] = useState(''); 
 
     const [lessonStopped, setLessonStopped] = useState(false);
 
-    // useEffect(() => {
-    //     if (lessonSegments.length > 0 && currentSegmentIndex < lessonSegments.length) {
-    //         if ((currentSegmentIndex + 1) % 2 === 0) { // Adjust the interval as needed
-    //             setShowFeelingsModal(true);
-    //         } else {
-    //             speakText(lessonSegments[currentSegmentIndex]);
-    //             setAskForQuestions(true);
-    //         }
-    //     }
-    // }, [lessonSegments, currentSegmentIndex]);
     
     useEffect(() => {
         if (lessonSegments.length > 0 && currentSegmentIndex < lessonSegments.length && !lessonStopped) {
@@ -72,7 +62,6 @@ const LessonGenerationPage = () => {
 
 
     const handleFeelingsSubmit = async (feeling) => {
-        console.log('Selected feeling:', feeling); // Debugging
     
         try {
             // Save the selected feeling as part of the progress
@@ -80,12 +69,12 @@ const LessonGenerationPage = () => {
                 student_name: studentName,
                 segment_index: currentSegmentIndex,
                 segment_content: lessonSegments[currentSegmentIndex],
-                student_feeling: feeling // Ensure this is correctly captured
+                student_feeling: feeling 
             });
     
-            setShowFeelingsModal(false); // Close the modal
-            setAskForQuestions(true); // Proceed with questions
-            speakText(lessonSegments[currentSegmentIndex]); // Start the current segment
+            setShowFeelingsModal(false);
+            setAskForQuestions(true); 
+            speakText(lessonSegments[currentSegmentIndex]); 
     
         } catch (error) {
             console.error('Error saving student feeling:', error);
@@ -104,7 +93,7 @@ const LessonGenerationPage = () => {
             const formData = new FormData();
             formData.append('name', studentName);
             if (pdfFile) {
-                formData.append('file', pdfFile); // Append the PDF file to the form data
+                formData.append('file', pdfFile); 
             }
 
             const response = await axios.post('http://localhost:8000/api/generate-lesson', formData, {
@@ -259,7 +248,7 @@ const LessonGenerationPage = () => {
             else if (transcript === "four" || transcript === "for"){
                 transcript = 4;
             }
-            setStudentAnswer(transcript);  // Set the answer to the recognized speech
+            setStudentAnswer(transcript);  
             setStudentQuestion(transcript);
         };
 
@@ -268,7 +257,7 @@ const LessonGenerationPage = () => {
         };
 
         recognition.onend = () => {
-            setIsListening(false);  // Stop listening once the input is captured
+            setIsListening(false); 
         };
 
         recognition.start();
@@ -360,10 +349,7 @@ const LessonGenerationPage = () => {
                             <pre>{lessonSegments[currentSegmentIndex]}</pre>
                         </div>
 
-                        {/* Stop Lesson Button */}
-                        {/* <button type="button" className="btn btn-danger mt-4" onClick={handleStopLesson}>
-                            Stop Lesson
-                        </button> */}
+
                         {askForQuestions ? (
                             <div className="question-section mt-4">
                                 <h3>Do you have any questions?</h3>
@@ -433,7 +419,7 @@ const LessonGenerationPage = () => {
                         
                     </>
                 )}
-                {/* Stop Lesson Button at the bottom, after the lesson generation content */}
+
                 {lessonSegments.length > 0 && (
                     <div contentlassName="stop-lesson-container">
                         <button type="button" className="btn-stop mt-4" onClick={handleStopLesson}>

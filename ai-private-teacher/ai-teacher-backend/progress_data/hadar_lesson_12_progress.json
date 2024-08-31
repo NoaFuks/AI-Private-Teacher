@@ -1,7 +1,7 @@
 {
     "segments": [
         {
-            "lesson_summary": "Summary of segment 5: To find the value of the digit 3 in the number 453, we look at its place value. In the number 453, the digit 3 is in the ones place, which means it represents units. So, the value of the digit 3 in the number 453 is 3. Similarly, in the number 55, the digit 5 on the right represents units, and the digit 5 on the left represents tens. Understanding place value helps us identify the worth of each digit in a number, making it easier to work with numbers and solve math problems.",
+            "lesson_summary": "Summary of segment 2: When we multiply a number by 10 or 100, we are increasing its value by adding zeros to the right side of the original number. For example, if we have the number 112, which has 2 units, 1 ten, and 1 hundred, and we multiply it by 10, we will get a number with 20 units, 10 tens, and 10 hundreds. This means that 20 units will become 2 tens, 10 tens will become 1 hundred, and 10 hundreds will become 1 thousand, resulting in the number 1,120. So, when we multiply a number by 10, we add a zero to the right of the original number.",
             "correct": null,
             "attempts": 1,
             "explanations": [],
@@ -16,7 +16,7 @@
             ],
             "student_feeling": null,
             "part_number": 2,
-            "lesson_name": "Segment 5"
+            "lesson_name": "Segment 2"
         }
     ]
 }

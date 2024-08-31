@@ -70,17 +70,17 @@ h1 {
 }
 
 .btn-primary {
-    background-color: #2193b0; /* Primary blue */
+    background-color: #2193b0; 
 }
 
 .btn-primary:hover:not(:disabled) {
-    background-color: #6dd5ed; /* Hover blue */
+    background-color: #6dd5ed; 
     transform: scale(1.05);
 }
 
 
 .btn-secondary:hover:not(:disabled) {
-    background-color: #6dd5ed; /* Hover blue */
+    background-color: #6dd5ed; 
     transform: scale(1.05);
 }
 
@@ -127,7 +127,7 @@ h1 {
 }
 
 pre {
-    background-color: #e0f2f1; /* Light blue background for lesson content */
+    background-color: #e0f2f1; 
     padding: 20px;
     border-radius: 8px;
     font-size: 1rem;
@@ -135,10 +135,10 @@ pre {
     white-space: pre-wrap;
     word-wrap: break-word;
     overflow-x: auto;
-    border: 1px solid #b2ebf2; /* Blue border */
+    border: 1px solid #b2ebf2; 
 }
 
-/* Responsive adjustments */
+
 @media (max-width: 768px) {
     .lesson-card {
         padding: 20px;
@@ -166,9 +166,9 @@ pre {
     font-size: 18px;
     padding: 15px 25px;
     border-radius: 10px;
-    text-align: center;    /* Centering the text horizontally */
-    display: flex;         /* Using flexbox for centering */
-    justify-content: center; /* Centering the text horizontally */
-    align-items: center;   /* Centering the text vertically */
+    text-align: center;    
+    display: flex;         
+    justify-content: center; 
+    align-items: center;   
     line-height: 1;
 }
