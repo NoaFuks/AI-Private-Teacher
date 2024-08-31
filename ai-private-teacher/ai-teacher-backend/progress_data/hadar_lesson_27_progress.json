@@ -1,0 +1,22 @@
+{
+    "segments": [
+        {
+            "lesson_summary": "Summary of segment 1: In math, natural numbers are an important part of the number system. These are numbers like 1, 2, 3, and so on. They are used to count things and show the quantity of something. Understanding the decimal structure is also crucial. This includes values going up by 10 and 100, as well as knowing the alphabet values from A to Z. Moreover, learning about operations like addition, subtraction, multiplication, and division is essential when working with numbers. By mastering these concepts, you will be well-equipped to solve various math problems and equations effectively.",
+            "correct": null,
+            "attempts": 1,
+            "explanations": [],
+            "details": [
+                {
+                    "interaction_details": [],
+                    "choice_question": null,
+                    "student_question": null,
+                    "answer_to_question": null,
+                    "asked_question": false
+                }
+            ],
+            "student_feeling": null,
+            "part_number": 2,
+            "lesson_name": "Segment 1"
+        }
+    ]
+}
