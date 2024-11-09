@@ -94,7 +94,7 @@ async def generate_lesson(name: str = Form(...), file: UploadFile = File(None)):
         with open(profile_path, 'r') as profile_file:
             student_profile = json.load(profile_file)
 
-        api_key = "sk-proj-hOTTh1Qv8iNbIumiJ3S6T3BlbkFJcB15KrFMIjwvwamTTPPp"
+        api_key = 'put your Api key'
         progress_tracker = ProgressTracker(student_name=name, progress_directory=PROGRESS_DIR)
         lesson_generator = LessonGenerator(user_profile=student_profile, api_key=api_key, progress_tracker=progress_tracker)
 
@@ -110,7 +110,7 @@ async def handle_question(request: Request):
     try:
         data = await request.json()
         student_question = data.get("question")
-        lesson_generator = LessonGenerator({}, api_key="sk-proj-hOTTh1Qv8iNbIumiJ3S6T3BlbkFJcB15KrFMIjwvwamTTPPp", progress_tracker=None)
+        lesson_generator = LessonGenerator({}, api_key='put your Api key', progress_tracker=None)
         answer = lesson_generator.handle_student_question(student_question)
         return {"answer": answer}
     except Exception as e:
